@@ -68,7 +68,7 @@ body{
 /* line: variant | qty | price | minus */
 .cart-line{
   display:grid;
-  grid-template-columns: auto 40px 70px 32px;
+  grid-template-columns: auto 50px 80px 32px;
   align-items:center;
   column-gap:8px;
   margin:6px 0;
@@ -117,7 +117,7 @@ body{
 
 <!-- HEADER -->
 <div class="cart-header">
-  <button class="back-btn" onclick="goBack()">←</button>
+  <button class="back-btn" onclick="history.back()">←</button>
   <div class="cart-title">Your Cart</div>
 </div>
 
@@ -128,50 +128,40 @@ body{
 <button class="place-btn" onclick="placeOrder()">PLACE ORDER</button>
 
 <script>
-/* ---------- UTIL ---------- */
-function goBack(){
-  history.back();
-}
+/* ---------- LOAD & NORMALIZE ONCE ---------- */
+let rawCart = [];
+const stored = JSON.parse(localStorage.getItem("cart")) || [];
 
-let rawCart = JSON.parse(localStorage.getItem("cart")) || [];
+stored.forEach(item=>{
+  if(!item.product) return;
 
-/* ---------- NORMALIZE (MERGE SAME ITEMS) ---------- */
-function normalizeCart(){
-  const merged = [];
+  const found = rawCart.find(m =>
+    m.product === item.product &&
+    m.variant === item.variant &&
+    m.flavour === item.flavour
+  );
 
-  rawCart.forEach(item=>{
-    if(!item.product) return; // safety
+  if(found){
+    found.qty += 1;
+    found.total += item.price;
+  } else {
+    rawCart.push({
+      product: item.product,
+      variant: item.variant,
+      flavour: item.flavour,
+      price: item.price,
+      image: item.image,
+      qty: 1,
+      total: item.price
+    });
+  }
+});
 
-    const found = merged.find(m =>
-      m.product === item.product &&
-      m.variant === item.variant &&
-      m.flavour === item.flavour
-    );
-
-    if(found){
-      found.qty += 1;
-      found.total += item.price;
-    }else{
-      merged.push({
-        product: item.product,
-        variant: item.variant,
-        flavour: item.flavour,
-        price: item.price,
-        image: item.image,
-        qty: 1,
-        total: item.price
-      });
-    }
-  });
-
-  rawCart = merged;
-  localStorage.setItem("cart", JSON.stringify(rawCart));
-}
+// save normalized cart
+localStorage.setItem("cart", JSON.stringify(rawCart));
 
 /* ---------- RENDER CART ---------- */
 function renderCart(){
-  normalizeCart();
-
   const box = document.getElementById("cart");
   box.innerHTML = "";
   let grand = 0;
@@ -193,7 +183,7 @@ function renderCart(){
         <div class="product-name">${item.product}</div>
 
         <div class="cart-line">
-          <span>${item.variant} (${item.flavour})</span>
+          <span>${item.variant}${item.flavour ? " ("+item.flavour+")" : ""}</span>
           <span>× ${item.qty}</span>
           <span>₹${item.total}</span>
           <button class="minus" onclick="removeOne(${index})">−</button>
@@ -210,14 +200,15 @@ function renderCart(){
   document.getElementById("grandTotal").innerText = "Total: ₹" + grand;
 }
 
-/* ---------- REMOVE ---------- */
+/* ---------- REMOVE ONE ---------- */
 function removeOne(index){
-  if(rawCart[index].qty > 1){
-    rawCart[index].qty -= 1;
-    rawCart[index].total -= rawCart[index].price;
-  }else{
-    rawCart.splice(index,1);
+  rawCart[index].qty -= 1;
+  rawCart[index].total -= rawCart[index].price;
+
+  if(rawCart[index].qty <= 0){
+    rawCart.splice(index, 1);
   }
+
   localStorage.setItem("cart", JSON.stringify(rawCart));
   renderCart();
 }
@@ -227,13 +218,9 @@ function placeOrder(){
   let msg = "Order\n\n";
 
   rawCart.forEach(i=>{
-    // build line cleanly
     let line = `• ${i.product} - ${i.variant}`;
-    if(i.flavour){
-      line += ` (${i.flavour})`;
-    }
+    if(i.flavour) line += ` (${i.flavour})`;
     line += ` × ${i.qty}\n`;
-
     msg += line;
   });
 
