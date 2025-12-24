@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Product</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a7cff">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 16px;
+}
+
+/* BACK BUTTON */
+.product-header{
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 20;
+}
+
+.back-btn{
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.back-btn:hover{
+  background: #f5f5f5;
+}
+
+/* CART */
+#cartBox {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  background: #0a7cff;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.container {
+  max-width: 520px;
+  margin: auto;
+  margin-top: 60px;
+}
+
+.main-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
+  background-color: #eee;
+  margin-bottom: 16px;
+}
+
+.option {
+  border: 1px solid #ccc;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.option.active {
+  border-color: #0a7cff;
+  background: #e9f2ff;
+  font-weight: bold;
+}
+
+.options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.qty-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-btn {
+  padding: 6px 12px;
+  font-size: 18px;
+}
+
+.add-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #ccc;
+  color: #fff;
+  font-size: 16px;
+}
+
+.add-btn.active {
+  background: #0a7cff;
+}
+
+.mrp {
+  text-decoration: line-through;
+  color: #777;
+  margin-right: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACK BUTTON -->
+<div class="product-header">
+  <button class="back-btn" onclick="history.back()">←</button>
+</div>
+
+<!-- CART BUTTON -->
+<div id="cartBox" onclick="location.href='cart.html'">CART (0)</div>
+
+<div class="container">
+  <div id="image" class="main-image"></div>
+  <h2 id="name"></h2>
+  <div id="price">Select variant</div>
+
+  <h4>Select Variant</h4>
+  <div id="variants" class="options"></div>
+
+  <div id="flavourSection">
+    <h4>Select Flavour</h4>
+    <div id="flavours" class="options"></div>
+  </div>
+
+  <h4>Quantity</h4>
+  <div class="qty-box">
+    <button class="qty-btn" onclick="changeQty(-1)">−</button>
+    <span id="qty">1</span>
+    <button class="qty-btn" onclick="changeQty(1)">+</button>
+  </div>
+
+  <br>
+  <button id="addBtn" class="add-btn">Select Variant & Flavour</button>
+</div>
+
+<script>
+/* ---------- DATA ---------- */
+const DATA = {
+  "phenyl": {
+    name: "Phenyl",
+    variants: { "1 L": { mrp:130, price:100 }, "5 L": { mrp:400, price:350 }},
+    flavours: ["Rose","Lemon","Plain"]
+  },
+  "floor-cleaner": {
+    name: "Floor Cleaner",
+    variants: { "1 L": { mrp:130, price:100 }, "5 L": { mrp:600, price:400 }},
+    flavours: ["Lavender","Sandalwood"]
+  },
+  "toilet-cleaner": {
+    name: "Toilet Cleaner",
+    variants: { "1 L": { mrp:130, price:100 }, "5 L": { mrp:600, price:400 }},
+    flavours: []
+  },
+  "dishwash": {
+    name: "Dishwash Liquid",
+    variants: { "1 L": { mrp:200, price:150 }},
+    flavours: []
+  },
+  "handwash": {
+    name: "Handwash Liquid",
+    variants: { "1 L": { mrp:130, price:100 }, "5 L": { mrp:600, price:400 }},
+    flavours: []
+  }
+};
+
+/* ---------- HELPERS ---------- */
+function getCart(){ return JSON.parse(localStorage.getItem("cart")) || []; }
+function saveCart(c){ localStorage.setItem("cart",JSON.stringify(c)); updateCart(); }
+function updateCart(){
+  document.getElementById("cartBox").innerText = "CART ("+getCart().length+")";
+}
+
+/* ---------- LOAD PRODUCT ---------- */
+const id = new URLSearchParams(location.search).get("id");
+const product = DATA[id];
+
+document.getElementById("name").innerText = product.name;
+document.getElementById("image").style.backgroundImage =
+  `url('./images/${id}/cover.jpg')`;
+
+let variant = null;
+let flavour = "";
+let qty = 1;
+
+const variantsDiv = document.getElementById("variants");
+const flavoursDiv = document.getElementById("flavours");
+const priceDiv = document.getElementById("price");
+const addBtn = document.getElementById("addBtn");
+
+if(product.flavours.length === 0){
+  document.getElementById("flavourSection").style.display = "none";
+}
+
+/* ---------- VARIANTS ---------- */
+Object.keys(product.variants).forEach(v=>{
+  const o = document.createElement("div");
+  o.className = "option";
+  o.innerText = v;
+  o.onclick = ()=>{
+    document.querySelectorAll("#variants .option").forEach(x=>x.classList.remove("active"));
+    o.classList.add("active");
+    variant = v;
+    updatePrice();
+    checkReady();
+  };
+  variantsDiv.appendChild(o);
+});
+
+/* ---------- FLAVOURS ---------- */
+product.flavours.forEach(f=>{
+  const o = document.createElement("div");
+  o.className = "option";
+  o.innerText = f;
+  o.onclick = ()=>{
+    document.querySelectorAll("#flavours .option").forEach(x=>x.classList.remove("active"));
+    o.classList.add("active");
+    flavour = f;
+    checkReady();
+  };
+  flavoursDiv.appendChild(o);
+});
+
+/* ---------- PRICE ---------- */
+function updatePrice(){
+  const p = product.variants[variant];
+  priceDiv.innerHTML =
+    `<span class="mrp">₹${p.mrp}</span> ₹${p.price} × ${qty} = <b>₹${p.price * qty}</b>`;
+}
+
+function changeQty(v){
+  qty = Math.max(1, qty + v);
+  document.getElementById("qty").innerText = qty;
+  if(variant) updatePrice();
+}
+
+/* ---------- READY ---------- */
+function checkReady(){
+  if(variant && (product.flavours.length === 0 || flavour)){
+    addBtn.classList.add("active");
+    addBtn.innerText = "ADD TO CART";
+    addBtn.onclick = addToCart;
+  }
+}
+
+/* ---------- ADD TO CART ---------- */
+function addToCart(){
+  const cart = getCart();
+  const unitPrice = product.variants[variant].price;
+
+  for(let i = 0; i < qty; i++){
+    cart.push({
+      product: product.name,
+      variant: variant,
+      flavour: flavour,
+      price: unitPrice,
+      image: `./images/${id}/cover.jpg`
+    });
+  }
+
+  saveCart(cart);
+  alert("Added to cart");
+}
+
+updateCart();
+</script>
+
+<!-- PWA SERVICE WORKER -->
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js");
+  });
+}
+</script>
+
+</body>
+</html>
