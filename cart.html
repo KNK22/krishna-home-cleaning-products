@@ -2,250 +2,159 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Your Cart</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0a7cff">
-
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
+<title>Your Cart</title>
 
 <style>
 body{
-  font-family: Arial, sans-serif;
-  padding:16px;
   margin:0;
+  font-family:Arial, sans-serif;
+  background:#fff;
 }
 
-/* ---------- HEADER ---------- */
-.cart-header{
+.header{
   display:flex;
   align-items:center;
-  gap:12px;
-  position:sticky;
-  top:0;
-  background:#fff;
-  padding:10px 0;
-  z-index:10;
+  padding:14px;
+  font-size:20px;
+  font-weight:600;
   border-bottom:1px solid #eee;
 }
 
-.back-btn{
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  border:1px solid #ccc;
-  background:#fff;
-  font-size:20px;
-  cursor:pointer;
+.cart{
+  padding:10px;
 }
 
-.cart-title{
-  font-size:20px;
-  font-weight:bold;
-}
-
-/* ---------- CART ---------- */
-.cart-block{
+.cart-item{
   display:flex;
-  gap:14px;
-  padding:14px 0;
-  border-bottom:1px solid #ddd;
+  gap:12px;
+  padding:12px 0;
+  border-bottom:1px solid #eee;
 }
 
 .cart-img{
-  width:120px;
-  height:120px;
+  width:90px;
+  height:90px;
   object-fit:cover;
-  border-radius:10px;
+  border-radius:8px;
 }
 
 .cart-info{
   flex:1;
 }
 
-.product-name{
+.cart-title{
   font-size:18px;
-  font-weight:bold;
+  font-weight:600;
   margin-bottom:6px;
 }
 
-/* line: variant | qty | price | minus */
-.cart-line{
+/* 👇 THIS is the key row */
+.cart-row{
   display:grid;
-  grid-template-columns: auto 50px 80px 32px;
+  grid-template-columns: 1fr auto auto;
   align-items:center;
-  column-gap:8px;
-  margin:6px 0;
+  gap:12px;
+  font-size:16px;
 }
 
-.cart-line span{
-  white-space:nowrap;
+/* left text */
+.cart-variant{
+  color:#333;
+  white-space:normal;
 }
 
+/* qty */
+.cart-qty{
+  font-weight:500;
+}
+
+/* price + minus together */
+.cart-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.cart-price{
+  font-weight:600;
+}
+
+/* minus button */
 .minus{
   width:28px;
   height:28px;
-  border:1px solid #777;
-  background:#f2f2f2;
-  cursor:pointer;
+  border-radius:6px;
+  border:1px solid #888;
+  background:#f3f3f3;
   font-size:18px;
-  border-radius:4px;
+  line-height:1;
+  cursor:pointer;
 }
 
-/* ---------- TOTAL ---------- */
 .subtotal{
   margin-top:6px;
-  font-weight:bold;
+  font-weight:600;
 }
 
 .total{
+  padding:16px;
   font-size:20px;
-  font-weight:bold;
-  margin:16px 0;
-}
-
-.place-btn{
-  width:100%;
-  padding:14px;
-  font-size:18px;
-  background:#25D366;
-  color:#fff;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
+  font-weight:700;
+  border-top:2px solid #000;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="cart-header">
-  <button class="back-btn" onclick="history.back()">←</button>
-  <div class="cart-title">Your Cart</div>
+<div class="header">← Your Cart</div>
+
+<div class="cart">
+
+  <!-- ITEM -->
+  <div class="cart-item">
+    <img src="images/floor-cleaner/cover.jpg" class="cart-img">
+    <div class="cart-info">
+      <div class="cart-title">Floor Cleaner</div>
+
+      <div class="cart-row">
+        <div class="cart-variant">5 L (Lavender)</div>
+        <div class="cart-qty">× 2</div>
+
+        <div class="cart-actions">
+          <div class="cart-price">₹800</div>
+          <button class="minus">−</button>
+        </div>
+      </div>
+
+      <div class="subtotal">Subtotal: ₹800</div>
+    </div>
+  </div>
+
+  <!-- ITEM -->
+  <div class="cart-item">
+    <img src="images/phenyl/cover.jpg" class="cart-img">
+    <div class="cart-info">
+      <div class="cart-title">Phenyl</div>
+
+      <div class="cart-row">
+        <div class="cart-variant">1 L (Lemon)</div>
+        <div class="cart-qty">× 2</div>
+
+        <div class="cart-actions">
+          <div class="cart-price">₹200</div>
+          <button class="minus">−</button>
+        </div>
+      </div>
+
+      <div class="subtotal">Subtotal: ₹200</div>
+    </div>
+  </div>
+
 </div>
 
-<!-- CART CONTENT -->
-<div id="cart"></div>
-
-<div class="total" id="grandTotal"></div>
-<button class="place-btn" onclick="placeOrder()">PLACE ORDER</button>
-
-<script>
-/* ---------- LOAD & NORMALIZE ONCE ---------- */
-let rawCart = [];
-const stored = JSON.parse(localStorage.getItem("cart")) || [];
-
-stored.forEach(item=>{
-  if(!item.product) return;
-
-  const found = rawCart.find(m =>
-    m.product === item.product &&
-    m.variant === item.variant &&
-    m.flavour === item.flavour
-  );
-
-  if(found){
-    found.qty += 1;
-    found.total += item.price;
-  } else {
-    rawCart.push({
-      product: item.product,
-      variant: item.variant,
-      flavour: item.flavour,
-      price: item.price,
-      image: item.image,
-      qty: 1,
-      total: item.price
-    });
-  }
-});
-
-// save normalized cart
-localStorage.setItem("cart", JSON.stringify(rawCart));
-
-/* ---------- RENDER CART ---------- */
-function renderCart(){
-  const box = document.getElementById("cart");
-  box.innerHTML = "";
-  let grand = 0;
-
-  if(rawCart.length === 0){
-    box.innerHTML = "<p>Cart is empty</p>";
-    document.getElementById("grandTotal").innerText = "";
-    return;
-  }
-
-  rawCart.forEach((item,index)=>{
-    const block = document.createElement("div");
-    block.className = "cart-block";
-
-    block.innerHTML = `
-      <img src="${item.image}" class="cart-img">
-
-      <div class="cart-info">
-        <div class="product-name">${item.product}</div>
-
-        <div class="cart-line">
-          <span>${item.variant}${item.flavour ? " ("+item.flavour+")" : ""}</span>
-          <span>× ${item.qty}</span>
-          <span>₹${item.total}</span>
-          <button class="minus" onclick="removeOne(${index})">−</button>
-        </div>
-
-        <div class="subtotal">Subtotal: ₹${item.total}</div>
-      </div>
-    `;
-
-    box.appendChild(block);
-    grand += item.total;
-  });
-
-  document.getElementById("grandTotal").innerText = "Total: ₹" + grand;
-}
-
-/* ---------- REMOVE ONE ---------- */
-function removeOne(index){
-  rawCart[index].qty -= 1;
-  rawCart[index].total -= rawCart[index].price;
-
-  if(rawCart[index].qty <= 0){
-    rawCart.splice(index, 1);
-  }
-
-  localStorage.setItem("cart", JSON.stringify(rawCart));
-  renderCart();
-}
-
-/* ---------- PLACE ORDER ---------- */
-function placeOrder(){
-  let msg = "Order\n\n";
-
-  rawCart.forEach(i=>{
-    let line = `• ${i.product} - ${i.variant}`;
-    if(i.flavour) line += ` (${i.flavour})`;
-    line += ` × ${i.qty}\n`;
-    msg += line;
-  });
-
-  window.open(
-    "https://wa.me/916305150766?text=" + encodeURIComponent(msg),
-    "_blank"
-  );
-}
-
-renderCart();
-</script>
-
-<!-- PWA SERVICE WORKER -->
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js");
-  });
-}
-</script>
+<div class="total">Total: ₹2300</div>
 
 </body>
 </html>
