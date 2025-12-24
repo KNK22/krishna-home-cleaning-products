@@ -1,160 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Your Cart</title>
 
+<link rel="stylesheet" href="style.css" />
+
 <style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#fff;
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #fff;
 }
 
-.header{
-  display:flex;
-  align-items:center;
-  padding:14px;
-  font-size:20px;
-  font-weight:600;
-  border-bottom:1px solid #eee;
+/* HEADER */
+header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
 }
 
-.cart{
-  padding:10px;
+header button {
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.cart-item{
-  display:flex;
-  gap:12px;
-  padding:12px 0;
-  border-bottom:1px solid #eee;
+/* CART LIST */
+#cart {
+  padding: 12px;
 }
 
-.cart-img{
-  width:90px;
-  height:90px;
-  object-fit:cover;
-  border-radius:8px;
+.cart-item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
 }
 
-.cart-info{
-  flex:1;
+.cart-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
-.cart-title{
-  font-size:18px;
-  font-weight:600;
-  margin-bottom:6px;
+.cart-details {
+  min-width: 0;
 }
 
-/* 👇 THIS is the key row */
-.cart-row{
-  display:grid;
-  grid-template-columns: 1fr auto auto;
-  align-items:center;
-  gap:12px;
-  font-size:16px;
+.cart-details h4 {
+  margin: 0 0 4px;
+  font-size: 16px;
 }
 
-/* left text */
-.cart-variant{
-  color:#333;
-  white-space:normal;
+.cart-details p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
 }
 
-/* qty */
-.cart-qty{
-  font-weight:500;
+/* QTY + PRICE GROUP */
+.cart-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-/* price + minus together */
-.cart-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
+.cart-subtotal {
+  margin-top: 4px;
+  font-weight: 600;
 }
 
-.cart-price{
-  font-weight:600;
+/* REMOVE BUTTON */
+.remove-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #999;
+  border-radius: 6px;
+  font-size: 18px;
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
-/* minus button */
-.minus{
-  width:28px;
-  height:28px;
-  border-radius:6px;
-  border:1px solid #888;
-  background:#f3f3f3;
-  font-size:18px;
-  line-height:1;
-  cursor:pointer;
+/* TOTAL BAR */
+#totalBox {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  padding: 12px;
+  border-top: 1px solid #eee;
 }
 
-.subtotal{
-  margin-top:6px;
-  font-weight:600;
+#total {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
-.total{
-  padding:16px;
-  font-size:20px;
-  font-weight:700;
-  border-top:2px solid #000;
+#orderBtn {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  background: #25d366;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">← Your Cart</div>
+<header>
+  <button onclick="history.back()">←</button>
+  <h2>Your Cart</h2>
+</header>
 
-<div class="cart">
+<div id="cart"></div>
 
-  <!-- ITEM -->
-  <div class="cart-item">
-    <img src="images/floor-cleaner/cover.jpg" class="cart-img">
-    <div class="cart-info">
-      <div class="cart-title">Floor Cleaner</div>
-
-      <div class="cart-row">
-        <div class="cart-variant">5 L (Lavender)</div>
-        <div class="cart-qty">× 2</div>
-
-        <div class="cart-actions">
-          <div class="cart-price">₹800</div>
-          <button class="minus">−</button>
-        </div>
-      </div>
-
-      <div class="subtotal">Subtotal: ₹800</div>
-    </div>
-  </div>
-
-  <!-- ITEM -->
-  <div class="cart-item">
-    <img src="images/phenyl/cover.jpg" class="cart-img">
-    <div class="cart-info">
-      <div class="cart-title">Phenyl</div>
-
-      <div class="cart-row">
-        <div class="cart-variant">1 L (Lemon)</div>
-        <div class="cart-qty">× 2</div>
-
-        <div class="cart-actions">
-          <div class="cart-price">₹200</div>
-          <button class="minus">−</button>
-        </div>
-      </div>
-
-      <div class="subtotal">Subtotal: ₹200</div>
-    </div>
-  </div>
-
+<div id="totalBox">
+  <div id="total">Total: ₹0</div>
+  <button id="orderBtn" onclick="placeOrder()">Place Order</button>
 </div>
 
-<div class="total">Total: ₹2300</div>
+<script>
+/* LOAD CART */
+let rawCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+/* MERGE SAME ITEMS (CRITICAL FIX) */
+const merged = {};
+rawCart.forEach(item => {
+  const key = `${item.name}_${item.variant}_${item.flavour || ""}`;
+  if (!merged[key]) {
+    merged[key] = { ...item, qty: Number(item.qty) || 1 };
+  } else {
+    merged[key].qty += Number(item.qty) || 1;
+  }
+});
+let cart = Object.values(merged);
+localStorage.setItem("cart", JSON.stringify(cart));
+
+function renderCart() {
+  const box = document.getElementById("cart");
+  box.innerHTML = "";
+  let total = 0;
+
+  if (cart.length === 0) {
+    box.innerHTML = "<p>Your cart is empty.</p>";
+    document.getElementById("total").innerText = "Total: ₹0";
+    return;
+  }
+
+  cart.forEach((item, index) => {
+    const price = Number(item.price) || 0;
+    const qty = Number(item.qty) || 1;
+    const subtotal = price * qty;
+    total += subtotal;
+
+    box.innerHTML += `
+      <div class="cart-item">
+        <img src="${item.image}" />
+        <div class="cart-details">
+          <h4>${item.name}</h4>
+          <p>${item.variant}${item.flavour ? ` (${item.flavour})` : ""}</p>
+          <div class="cart-meta">
+            <span>× ${qty}</span>
+            <span>₹${subtotal}</span>
+          </div>
+          <div class="cart-subtotal">Subtotal: ₹${subtotal}</div>
+        </div>
+        <button class="remove-btn" onclick="removeItem(${index})">−</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("total").innerText = `Total: ₹${total}`;
+}
+
+function removeItem(index) {
+  if (cart[index].qty > 1) {
+    cart[index].qty--;
+  } else {
+    cart.splice(index, 1);
+  }
+  localStorage.setItem("cart", JSON.stringify(cart));
+  renderCart();
+}
+
+function placeOrder() {
+  let msg = "Order\n\n";
+  cart.forEach(i => {
+    msg += `• ${i.name} - ${i.variant}`;
+    if (i.flavour) msg += ` (${i.flavour})`;
+    msg += ` × ${i.qty}\n\n`;
+  });
+
+  window.open(
+    "https://wa.me/916305150766?text=" + encodeURIComponent(msg),
+    "_blank"
+  );
+}
+
+renderCart();
+</script>
 
 </body>
 </html>
