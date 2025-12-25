@@ -5,184 +5,62 @@
 <title>Product</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0a7cff">
+<meta name="theme-color" content="#2e7d32">
 
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
-
-<style>
-.product-header{
-  position: fixed;
-  top: 14px;
-  left: 14px;
-  z-index: 20;
-}
-
-.back-btn{
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid #ccc;
-  background: #fff;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-#cartBox {
-  position: fixed;
-  top: 14px;
-  right: 14px;
-  background: #0a7cff;
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 10;
-}
-
-/* ===== LAYOUT FIX ===== */
-.container {
-  max-width: 1100px;
-  margin: 80px auto 40px;
-  padding: 0 16px;
-}
-
-.product-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  align-items: start;
-}
-
-@media (max-width: 768px) {
-  .product-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-.product-left {
-  width: 100%;
-}
-
-.product-right {
-  max-width: 420px;
-}
-
-/* IMAGE */
-.main-image {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 16px;
-  background-size: cover;
-  background-position: center;
-  background-color: #eee;
-}
-
-/* OPTIONS */
-.option {
-  border: 1px solid #ccc;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.option.active {
-  border-color: #0a7cff;
-  background: #e9f2ff;
-  font-weight: bold;
-}
-
-.options {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-
-/* QTY */
-.qty-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.qty-btn {
-  padding: 6px 12px;
-  font-size: 18px;
-}
-
-/* ADD BUTTON */
-.add-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  background: #ccc;
-  color: #fff;
-  font-size: 16px;
-}
-
-.add-btn.active {
-  background: #0a7cff;
-  cursor: pointer;
-}
-
-/* PRICE */
-.mrp {
-  text-decoration: line-through;
-  color: #777;
-  margin-right: 6px;
-}
-
-/* DESCRIPTION */
-.info-section {
-  margin-top: 40px;
-  max-width: 900px;
-}
-
-.info-section h3 {
-  margin-bottom: 6px;
-}
-
-.info-section p {
-  color: #444;
-  line-height: 1.6;
-}
-</style>
 </head>
 
 <body>
 
-<!-- BACK -->
-<div class="product-header">
-  <button class="back-btn" onclick="history.back()">←</button>
+<!-- =====================================================
+     HEADER CONTROLS (Back & Cart)
+     Uses shared styles from style.css
+===================================================== -->
+
+<div style="position:fixed; top:14px; left:14px; z-index:20;">
+  <button class="header-pill back-btn" onclick="history.back()">
+    ← Back
+  </button>
 </div>
 
-<!-- CART -->
-<div id="cartBox" onclick="location.href='cart.html'">CART (0)</div>
+<div style="position:fixed; top:14px; right:14px; z-index:20;">
+  <div id="cartBox" class="header-pill cart-btn" onclick="location.href='cart.html'">
+    🛒 Cart (0)
+  </div>
+</div>
+
+<!-- =====================================================
+     MAIN PRODUCT CONTAINER
+===================================================== -->
 
 <div class="container">
 
-  <!-- TOP LAYOUT -->
+  <!-- ===== PRODUCT IMAGE + OPTIONS LAYOUT ===== -->
   <div class="product-layout">
+
+    <!-- LEFT: PRODUCT IMAGE -->
     <div class="product-left">
       <div id="image" class="main-image"></div>
     </div>
 
+    <!-- RIGHT: PRODUCT OPTIONS -->
     <div class="product-right">
       <h2 id="name"></h2>
+
       <div id="price">Select variant</div>
 
+      <!-- VARIANTS -->
       <h4>Select Variant</h4>
       <div id="variants" class="options"></div>
 
+      <!-- FLAVOURS -->
       <div id="flavourSection">
         <h4>Select Flavour</h4>
         <div id="flavours" class="options"></div>
       </div>
 
+      <!-- QUANTITY -->
       <h4>Quantity</h4>
       <div class="qty-box">
         <button class="qty-btn" onclick="changeQty(-1)">−</button>
@@ -190,11 +68,14 @@
         <button class="qty-btn" onclick="changeQty(1)">+</button>
       </div>
 
-      <button id="addBtn" class="add-btn">Select Variant & Flavour</button>
+      <!-- ADD TO CART -->
+      <button id="addBtn" class="add-btn">
+        Select Variant & Flavour
+      </button>
     </div>
   </div>
 
-  <!-- DESCRIPTION -->
+  <!-- ===== DESCRIPTION & USAGE ===== -->
   <div class="info-section">
     <h3>Description</h3>
     <p id="description"></p>
@@ -205,34 +86,30 @@
 
 </div>
 
+<!-- =====================================================
+     DATA & LOGIC
+===================================================== -->
+
 <script src="data.js"></script>
 
 <script>
-/* ===== CART ===== */
+/* ---------------- CART HELPERS ---------------- */
+
 function getCart(){
   return JSON.parse(localStorage.getItem("cart")) || [];
-}
-
-function saveCart(cart){
-  localStorage.setItem("cart", JSON.stringify(cart));
-  updateCart();
 }
 
 function updateCart(){
   const cart = getCart();
   let count = 0;
   cart.forEach(i => count += Number(i.qty) || 0);
-  document.getElementById("cartBox").innerText = "CART (" + count + ")";
+  document.getElementById("cartBox").innerText = "🛒 Cart (" + count + ")";
 }
 
-/* ===== LOAD PRODUCT ===== */
+/* ---------------- PRODUCT LOAD ---------------- */
+
 const id = new URLSearchParams(location.search).get("id");
 const product = PRODUCTS[id];
-
-if(!product){
-  alert("Product not found");
-  history.back();
-}
 
 document.getElementById("name").innerText = product.name;
 document.getElementById("image").style.backgroundImage =
@@ -241,53 +118,59 @@ document.getElementById("image").style.backgroundImage =
 document.getElementById("description").innerText = product.description;
 document.getElementById("howToUse").innerText = product.howToUse;
 
+/* ---------------- STATE ---------------- */
+
 let variant = null;
 let flavour = "";
 let qty = 1;
 
-const variantsDiv = document.getElementById("variants");
-const flavoursDiv = document.getElementById("flavours");
 const priceDiv = document.getElementById("price");
 const addBtn = document.getElementById("addBtn");
 
-if(product.flavours.length === 0){
-  document.getElementById("flavourSection").style.display = "none";
-}
+/* ---------------- VARIANTS ---------------- */
 
-/* ===== VARIANTS ===== */
 Object.keys(product.variants).forEach(v => {
   const o = document.createElement("div");
   o.className = "option";
   o.innerText = v;
   o.onclick = () => {
-    document.querySelectorAll("#variants .option").forEach(x => x.classList.remove("active"));
+    document.querySelectorAll("#variants .option")
+      .forEach(x => x.classList.remove("active"));
     o.classList.add("active");
     variant = v;
     updatePrice();
     checkReady();
   };
-  variantsDiv.appendChild(o);
+  variants.appendChild(o);
 });
 
-/* ===== FLAVOURS ===== */
+/* ---------------- FLAVOURS ---------------- */
+
+if(product.flavours.length === 0){
+  document.getElementById("flavourSection").style.display = "none";
+}
+
 product.flavours.forEach(f => {
   const o = document.createElement("div");
   o.className = "option";
   o.innerText = f;
   o.onclick = () => {
-    document.querySelectorAll("#flavours .option").forEach(x => x.classList.remove("active"));
+    document.querySelectorAll("#flavours .option")
+      .forEach(x => x.classList.remove("active"));
     o.classList.add("active");
     flavour = f;
     checkReady();
   };
-  flavoursDiv.appendChild(o);
+  flavours.appendChild(o);
 });
 
-/* ===== PRICE ===== */
+/* ---------------- PRICE & QTY ---------------- */
+
 function updatePrice(){
   const p = product.variants[variant];
   priceDiv.innerHTML =
-    `<span class="mrp">₹${p.mrp}</span> ₹${p.price} × ${qty} = <b>₹${p.price * qty}</b>`;
+    `<span class="mrp">₹${p.mrp}</span>
+     ₹${p.price} × ${qty} = <b>₹${p.price * qty}</b>`;
 }
 
 function changeQty(v){
@@ -296,54 +179,38 @@ function changeQty(v){
   if(variant) updatePrice();
 }
 
-/* ===== READY ===== */
+/* ---------------- ADD TO CART ---------------- */
+
 function checkReady(){
   if(variant && (product.flavours.length === 0 || flavour)){
     addBtn.classList.add("active");
     addBtn.innerText = "ADD TO CART";
-    addBtn.onclick = addToCart;
+    addBtn.onclick = () => {
+      const cart = getCart();
+      const existing = cart.find(i =>
+        i.product === product.name &&
+        i.variant === variant &&
+        i.flavour === flavour
+      );
+
+      if(existing) existing.qty += qty;
+      else cart.push({
+        product: product.name,
+        variant,
+        flavour,
+        price: product.variants[variant].price,
+        qty,
+        image: `./images/${product.imageFolder}/cover.jpg`
+      });
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCart();
+      alert("Added to cart");
+    };
   }
 }
 
-/* ===== ADD TO CART ===== */
-function addToCart(){
-  const cart = getCart();
-  const unitPrice = product.variants[variant].price;
-
-  const existing = cart.find(i =>
-    i.product === product.name &&
-    i.variant === variant &&
-    i.flavour === flavour
-  );
-
-  if(existing){
-    existing.qty += qty;
-  } else {
-    cart.push({
-      product: product.name,
-      variant,
-      flavour,
-      price: unitPrice,
-      qty,
-      image: `./images/${product.imageFolder}/cover.jpg`
-    });
-  }
-
-  saveCart(cart);
-  alert("Added to cart");
-}
-
-document.addEventListener("DOMContentLoaded", updateCart);
-window.addEventListener("focus", updateCart);
-window.addEventListener("storage", updateCart);
-</script>
-
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js");
-  });
-}
+updateCart();
 </script>
 
 </body>
