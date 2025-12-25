@@ -1,142 +1,177 @@
-/* =========================================
-   SINGLE SOURCE OF TRUTH – DATA.JS
-   Products + Combo Offers
-   ========================================= */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Krishna Home Cleaning Products</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2e7d32" />
+
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* =====================================================
+       FESTIVE OFFER BLOCK – HOMEPAGE
+       (BIG IMAGE + CENTER BUTTON + DOTTED BORDER)
+    ===================================================== */
+
+    .festive-home-wrapper {
+      padding: 20px;
+    }
+
+    /* DOTTED CONTAINER */
+    .festive-home-box {
+      border: 2px solid #050709; /* soft light border */
+      border-radius: 26px;
+      padding: 20px;
+      background: #ffffff;
+    }
 
 
-/* =====================
-   NORMAL PRODUCTS
-   ===================== */
+    /* FESTIVE IMAGE */
+    .festive-home-image {
+      width: 100%;
+      height: 180px;                 /* CHANGE HEIGHT IF NEEDED */
+      border-radius: 18px;
+      background-size: cover;
+      background-position: center;
+      background-color: #e5e5e5;
 
-const PRODUCTS = {
-  phenyl: {
-    id: "phenyl",
-    name: "Phenyl",
-    imageFolder: "phenyl",
-    variants: {
-      "1 L": { price: 100, mrp: 130 },
-      "5 L": { price: 350, mrp: 500 }
-    },
-    flavours: ["Rose", "Lemon", "Plain"],
-    description:
-      "Krishna Phenyl is a powerful disinfectant floor cleaner suitable for daily use.",
-    howToUse:
-      "Add 1–2 caps in a bucket of water and mop the floor."
-  },
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-  "floor-cleaner": {
-    id: "floor-cleaner",
-    name: "Floor Cleaner",
-    imageFolder: "floor-cleaner",
-    variants: {
-      "1 L": { price: 130, mrp: 200 },
-      "5 L": { price: 500, mrp: 600 }
-    },
-    flavours: ["Lavender", "Sandalwood"],
-    description:
-      "Removes tough stains and leaves a long-lasting fragrance.",
-    howToUse:
-      "Mix 1–2 caps in water and mop evenly."
-  },
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 22px;
+    }
 
-  dishwash: {
-    id: "dishwash",
-    name: "Dishwash Liquid",
-    imageFolder: "dishwash",
-    variants: {
-      "1 L": { price: 150, mrp: 200 },
-      "5 L": { price: 450, mrp: 600 }
-    },
-    flavours: [],
-    description:
-      "Cuts grease effectively and is gentle on hands.",
-    howToUse:
-      "Apply a few drops on sponge and clean utensils."
-  },
+    /* CENTER BUTTON */
+    .festive-home-btn {
+      display: block;
+      width: fit-content;
+      margin: 0 auto;
 
-  handwash: {
-    id: "handwash",
-    name: "Handwash",
-    imageFolder: "handwash",
-    variants: {
-      "1 L": { price: 100, mrp: 130 },
-      "5 L": { price: 400, mrp: 500 }
-    },
-    flavours: [],
-    description:
-      "Kills germs while keeping hands soft.",
-    howToUse:
-      "Apply on wet hands, lather for 20 seconds and rinse."
-  },
+      background: #22c55e;
+      color: #fff;
+      padding: 14px 30px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+    }
 
-  "toilet-cleaner": {
-    id: "toilet-cleaner",
-    name: "Toilet Cleaner",
-    imageFolder: "toilet-cleaner",
-    variants: {
-      "1 L": { price: 130, mrp: 200 },
-      "5 L": { price: 500, mrp: 600 }
-    },
-    flavours: [],
-    description:
-      "Removes stains and kills 99.9% germs.",
-    howToUse:
-      "Pour under rim, wait 10 minutes, scrub and flush."
+    .festive-home-btn:hover {
+      background: #16a34a;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<div class="header">
+  <div class="header-title">
+    Krishna Home Cleaning Products
+  </div>
+
+  <div class="trust-strip">
+    ✔ Hygienic & Safe &nbsp; • &nbsp;
+    ✔ Trusted Quality &nbsp; • &nbsp;
+    ✔ Affordable Prices
+  </div>
+</div>
+
+<hr class="header-divider" />
+
+<!-- =====================================================
+     CART BUTTON
+===================================================== -->
+
+<div class="cart-row">
+  <a href="cart.html" class="header-pill cart-btn" id="cartBtn">
+    🛒 Cart (0)
+  </a>
+</div>
+
+<!-- =====================================================
+     FESTIVE OFFER BLOCK (HOMEPAGE)
+     👉 ONLY THIS SECTION IS FOR FESTIVE POSTER
+===================================================== -->
+
+<div class="festive-home-wrapper">
+
+  <div class="festive-home-box">
+
+    <!-- FESTIVE IMAGE (CHANGE IMAGE FILE ONLY) -->
+    <div
+      class="festive-home-image"
+      style="background-image: url('./images/offers/offer-homepage.jpg');"
+    >
+    </div>
+
+    <!-- BUTTON -->
+    <a href="offers.html" class="festive-home-btn">
+      View Today’s offers 
+    </a>
+
+  </div>
+
+</div>
+
+<!-- =====================================================
+     NORMAL PRODUCTS GRID (DO NOT TOUCH)
+===================================================== -->
+
+<div class="grid" id="grid"></div>
+
+<!-- =====================================================
+     DATA
+===================================================== -->
+
+<script src="data.js"></script>
+
+<script>
+  /* ================= CART COUNT ================= */
+  function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let count = 0;
+    cart.forEach(i => count += Number(i.qty) || 0);
+    document.getElementById("cartBtn").innerText =
+      "🛒 Cart (" + count + ")";
   }
-};
 
+  document.addEventListener("DOMContentLoaded", updateCartCount);
+  window.addEventListener("focus", updateCartCount);
 
-/* =====================
-   COMBO / OFFER PRODUCTS
-   ===================== */
+  /* ================= RENDER PRODUCTS ================= */
 
-const COMBO_OFFERS = [
-  {
-    id: "home-hygiene-combo",
+  const grid = document.getElementById("grid");
 
-    /* 🔹 CHANGE THIS TO:
-       "Festive Offers"
-       "Today’s Deals"
-       "Special Combo"
-    */
-    sectionTitle: "Combo Offers",
+  Object.values(PRODUCTS).forEach(p => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-    title: "Home Hygiene Combo",
-    badge: "FREE Dishwash & Handwash",
+    const basePrice = Object.values(p.variants)[0].price;
 
-    /* 🔹 IMAGES (ONLY CHANGE FILES, NOT CODE) */
-    images: {
-      homepage: "images/offers/offer-homepage.jpg",
-      detail: "images/offers/offer-pic.jpg"
-    },
+    card.innerHTML = `
+      <div class="img-box"
+           style="background-image:url('./images/${p.imageFolder}/cover.jpg')">
+      </div>
+      <h3>${p.name}</h3>
+      <p>From ₹${basePrice}</p>
+    `;
 
-    /* 🔹 PRICE CONTROL */
-    price: 199,
-    mrp: 260,
+    card.onclick = () => {
+      location.href = "product.html?id=" + p.id;
+    };
 
-    /* 🔹 WHAT CUSTOMER GETS */
-    items: [
-      { name: "Phenyl", qty: "1 L" },
-      { name: "Floor Cleaner", qty: "1 L" }
-    ],
+    grid.appendChild(card);
+  });
+</script>
 
-    freeItems: [
-      { name: "Dishwash", qty: "250 ml" },
-      { name: "Handwash", qty: "250 ml" }
-    ],
-
-    description:
-      "Best value combo for complete home hygiene. Ideal for daily cleaning needs.",
-
-    howToUse:
-      "Use phenyl and floor cleaner as directed. Free products included with every combo."
-  }
-];
-
-
-/* =====================
-   EXPORT (GLOBAL)
-   ===================== */
-
-window.PRODUCTS = PRODUCTS;
-window.COMBO_OFFERS = COMBO_OFFERS;
+</body>
+</html>
