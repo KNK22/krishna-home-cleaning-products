@@ -1,87 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8" />
+<title>Krishna Home Cleaning Products</title>
 
-  <title>Krishna Home Cleaning Products</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4CAF50">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0a7cff">
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff;
+}
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
+/* ================= HEADER ================= */
+.header {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 5;
+  padding: 16px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+}
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      margin: 0;
-      background: #ffffff;
-    }
+/* ================= SPLASH OVERLAY ================= */
+#splash {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
 
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
-    }
+.splash-content {
+  text-align: center;
+  transform: translateX(60px);
+  opacity: 0;
+  animation: slideIn 0.7s ease-out forwards;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-    }
+.splash-content h1 {
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  margin: 0;
+}
 
-    .card {
-      border: 1px solid #ddd;
-      border-radius: 16px;
-      padding: 12px;
-      cursor: pointer;
-      text-align: center;
-      background: #fff;
-      transition: transform 0.15s ease;
-    }
+.splash-content p {
+  margin-top: 12px;
+  font-size: 18px;
+  color: #2e7d32;
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+  animation-delay: 0.6s;
+}
 
-    .card:hover {
-      transform: scale(1.02);
-    }
+.hide-splash {
+  animation: fadeOut 0.4s ease forwards;
+}
 
-    /* Square image box */
-    .img-box {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      border-radius: 14px;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      margin-bottom: 10px;
-      background-color: #f2f2f2;
-    }
+/* ================= ANIMATIONS ================= */
+@keyframes slideIn {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 
-    .card h3 {
-      margin: 6px 0 4px;
-      font-size: 16px;
-    }
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
 
-    .card p {
-      margin: 0;
-      font-weight: bold;
-      font-size: 14px;
-    }
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
 
-    @media (min-width: 768px) {
-      .grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-  </style>
+/* ================= CART BUTTON ================= */
+.cart-btn {
+  position: fixed;
+  top: 18px;
+  right: 16px;
+  background: #2e7d32;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  z-index: 10;
+}
+
+/* ================= PRODUCTS ================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  padding: 20px;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.img-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 10px;
+  background-color: #f2f2f2;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+</style>
 </head>
 
 <body>
 
-<h1>Krishna Home Cleaning Products</h1>
+<!-- SPLASH INTRO -->
+<div id="splash">
+  <div class="splash-content">
+    <h1>KRISHNA</h1>
+    <p>Clean Homes. Simple Living.</p>
+  </div>
+</div>
 
+<!-- HEADER (STAYS) -->
+<div class="header">Krishna Home Cleaning Products</div>
+
+<!-- CART -->
+<a href="cart.html" class="cart-btn">🛒 Cart</a>
+
+<!-- MAIN CONTENT -->
 <div class="grid" id="grid"></div>
 
 <script>
+/* SPLASH CONTROL */
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    const splash = document.getElementById("splash");
+    splash.classList.add("hide-splash");
+    setTimeout(() => splash.remove(), 400);
+  }, 1400);
+});
+
+/* PRODUCTS */
 const PRODUCTS = [
   { id: "floor-cleaner", name: "Floor Cleaner", price: 100 },
   { id: "phenyl", name: "Phenyl", price: 100 },
@@ -95,30 +177,14 @@ const grid = document.getElementById("grid");
 PRODUCTS.forEach(p => {
   const card = document.createElement("div");
   card.className = "card";
-
   card.innerHTML = `
-    <div class="img-box"
-      style="background-image:url('./images/${p.id}/cover.jpg');">
-    </div>
+    <div class="img-box" style="background-image:url('./images/${p.id}/cover.jpg')"></div>
     <h3>${p.name}</h3>
     <p>From ₹${p.price}</p>
   `;
-
-  card.onclick = () => {
-    window.location.href = "product.html?id=" + p.id;
-  };
-
+  card.onclick = () => location.href = "product.html?id=" + p.id;
   grid.appendChild(card);
 });
-</script>
-
-<!-- Service Worker (BOTTOM – correct place) -->
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js");
-  });
-}
 </script>
 
 </body>
