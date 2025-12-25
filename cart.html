@@ -5,136 +5,170 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Your Cart</title>
 
-<link rel="stylesheet" href="style.css" />
-
 <style>
 /* =====================================================
-   CART HEADER (FIXED CENTER TITLE)
+   GLOBAL
 ===================================================== */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff;
+  color: #000;
+}
 
+/* =====================================================
+   HEADER
+===================================================== */
 header {
   position: relative;
   display: flex;
   align-items: center;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border-bottom: 1px solid #eee;
 }
 
-/* Back button stays on left */
-header .back-btn {
-  position: relative;
-  z-index: 2;
+.header-pill {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-/* TRUE CENTER TITLE */
 header h2 {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  font-size: 20px;        /* 🔥 bigger */
-  font-weight: 700;      /* 🔥 stronger */
+  font-size: 22px;
+  font-weight: 700;
 }
 
 /* =====================================================
-   CART LIST
+   CART WRAPPER
 ===================================================== */
-
 #cart {
-  padding: 12px;
+  padding: 16px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
+/* =====================================================
+   EMPTY CART
+===================================================== */
+.empty-cart {
+  text-align: center;
+  color: #666;
+  margin: 60px 0;
+  font-size: 18px;
+}
+
+/* =====================================================
+   CART ITEM
+===================================================== */
 .cart-item {
   display: grid;
-  grid-template-columns: 80px 1fr auto;
-  gap: 10px;
-  align-items: center;
-  padding: 12px 0;
+  grid-template-columns: 140px 1fr;
+  gap: 20px;
+  padding: 16px 0;
   border-bottom: 1px solid #eee;
 }
 
 .cart-item img {
-  width: 80px;
-  height: 80px;
+  width: 140px;
+  height: 140px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .cart-details h4 {
-  margin: 0 0 4px;
-  font-size: 16px;
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 700;
 }
 
-.cart-details p {
-  margin: 0;
-  font-size: 14px;
-  color: #555;
+/* =====================================================
+   VARIANT ROW
+===================================================== */
+.variant-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 0;
 }
 
-.cart-meta {
+.qty-box {
   display: flex;
-  gap: 12px;
-  margin-top: 6px;
+  align-items: center;
+  gap: 6px;
+}
+
+.qty-box button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.qty-box button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.qty-box span {
+  min-width: 16px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.variant-price {
+  min-width: 80px;
+  text-align: right;
   font-weight: 600;
 }
 
 .cart-subtotal {
-  margin-top: 4px;
-  font-weight: 600;
-}
-
-.remove-btn {
-  width: 32px;
-  height: 32px;
-  border: 1px solid #999;
-  border-radius: 6px;
-  font-size: 18px;
-  background: #fff;
-  cursor: pointer;
+  margin-top: 10px;
+  font-weight: 700;
 }
 
 /* =====================================================
-   EMPTY STATE
+   FOOTER
 ===================================================== */
-
-.empty {
-  text-align: center;
-  padding: 40px 20px;
-  color: #666;
-  font-size: 16px;
-}
-
-/* =====================================================
-   FOOTER TOTAL
-===================================================== */
-
 #totalBox {
   position: sticky;
   bottom: 0;
   background: #fff;
-  padding: 12px;
+  padding: 16px;
   border-top: 1px solid #eee;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 #total {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 #orderBtn {
   width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  background: #25d366;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  background: #22c55e;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
 }
 
 #orderBtn:disabled {
-  background: #aaa;
+  background: #bdbdbd;
   cursor: not-allowed;
 }
 </style>
@@ -142,65 +176,60 @@ header h2 {
 
 <body>
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
+<!-- ================= HEADER ================= -->
 <header>
-  <button class="header-pill back-btn" onclick="history.back()">
-    ← Back
-  </button>
-
+  <button class="header-pill" onclick="history.back()">← Back</button>
   <h2>Your Cart</h2>
-
-  <!-- Spacer to keep title centered -->
-  <div></div>
 </header>
 
-<!-- =====================================================
-     CART ITEMS
-===================================================== -->
-
+<!-- ================= CART ================= -->
 <div id="cart"></div>
 
-<!-- =====================================================
-     TOTAL & ORDER
-===================================================== -->
-
+<!-- ================= FOOTER ================= -->
 <div id="totalBox">
   <div id="total">Total: ₹0</div>
-  <button id="orderBtn" disabled>Place Order</button>
+  <button id="orderBtn">Place Order</button>
 </div>
 
 <script>
-let rawCart = JSON.parse(localStorage.getItem("cart")) || [];
+/* =====================================================
+   LOAD CART
+===================================================== */
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-/* MERGE DUPLICATES */
-const merged = {};
-rawCart.forEach(item => {
-  const key = `${item.product}_${item.variant}_${item.flavour || ""}`;
-  if (!merged[key]) {
-    merged[key] = { ...item, qty: Number(item.qty), price: Number(item.price) };
-  } else {
-    merged[key].qty += Number(item.qty);
-  }
-});
+/* =====================================================
+   GROUP CART BY PRODUCT
+===================================================== */
+function groupCart() {
+  const grouped = {};
+  cart.forEach(item => {
+    if (!grouped[item.product]) {
+      grouped[item.product] = {
+        product: item.product,
+        image: item.image,
+        items: []
+      };
+    }
+    grouped[item.product].items.push(item);
+  });
+  return Object.values(grouped);
+}
 
-let cart = Object.values(merged);
-localStorage.setItem("cart", JSON.stringify(cart));
-
+/* =====================================================
+   RENDER CART
+===================================================== */
 function renderCart() {
-  const box = document.getElementById("cart");
+  const cartBox = document.getElementById("cart");
   const totalEl = document.getElementById("total");
   const orderBtn = document.getElementById("orderBtn");
 
-  box.innerHTML = "";
-  let total = 0;
+  cartBox.innerHTML = "";
 
   if (cart.length === 0) {
-    box.innerHTML = `
-      <div class="empty">
-        🛒 Your cart is empty.<br><br>
+    cartBox.innerHTML = `
+      <div class="empty-cart">
+        🛒 <br><br>
+        <strong>Your cart is empty.</strong><br>
         Add products to continue.
       </div>
     `;
@@ -209,51 +238,86 @@ function renderCart() {
     return;
   }
 
-  cart.forEach((item, index) => {
-    const subtotal = item.price * item.qty;
-    total += subtotal;
+  orderBtn.disabled = false;
 
-    box.innerHTML += `
-      <div class="cart-item">
-        <img src="${item.image}" />
-        <div class="cart-details">
-          <h4>${item.product}</h4>
-          <p>${item.variant}${item.flavour ? ` (${item.flavour})` : ""}</p>
-          <div class="cart-meta">
-            <span>× ${item.qty}</span>
-            <span>₹${subtotal}</span>
+  let groups = groupCart();
+  let grandTotal = 0;
+
+  groups.forEach(group => {
+    let productTotal = 0;
+
+    const rows = group.items.map((item, i) => {
+      const subtotal = item.qty * item.price;
+      productTotal += subtotal;
+      grandTotal += subtotal;
+
+      return `
+        <div class="variant-row">
+          <div>${item.variant}${item.flavour ? ` (${item.flavour})` : ""}</div>
+
+          <div class="qty-box">
+            <button onclick="updateQty('${group.product}', ${i}, -1)">−</button>
+            <span>${item.qty}</span>
+            <button onclick="updateQty('${group.product}', ${i}, 1)">+</button>
           </div>
-          <div class="cart-subtotal">Subtotal: ₹${subtotal}</div>
+
+          <div class="variant-price">₹${subtotal}</div>
         </div>
-        <button class="remove-btn" onclick="removeItem(${index})">−</button>
+      `;
+    }).join("");
+
+    cartBox.innerHTML += `
+      <div class="cart-item">
+        <img src="${group.image}">
+        <div class="cart-details">
+          <h4>${group.product}</h4>
+          ${rows}
+          <div class="cart-subtotal">Subtotal: ₹${productTotal}</div>
+        </div>
       </div>
     `;
   });
 
-  totalEl.innerText = "Total: ₹" + total;
-  orderBtn.disabled = false;
+  totalEl.innerText = "Total: ₹" + grandTotal;
 }
 
-function removeItem(index) {
-  if (cart[index].qty > 1) cart[index].qty--;
-  else cart.splice(index, 1);
+/* =====================================================
+   UPDATE QUANTITY
+   - If qty becomes 0 → REMOVE item
+===================================================== */
+function updateQty(product, index, change) {
+  const groups = groupCart();
+  const group = groups.find(g => g.product === product);
+  if (!group) return;
+
+  const item = group.items[index];
+  if (!item) return;
+
+  item.qty += change;
+
+  // ❌ remove items with qty <= 0
+  cart = cart.filter(i => i.qty > 0);
 
   localStorage.setItem("cart", JSON.stringify(cart));
   renderCart();
 }
 
-document.getElementById("orderBtn").onclick = function () {
-  if (cart.length === 0) return;
+/* =====================================================
+   PLACE ORDER (WhatsApp)
+===================================================== */
+document.getElementById("orderBtn").onclick = () => {
+  let msg = "Order Details\n\n";
 
-  let msg = "Order\n\n";
-  cart.forEach(i => {
-    msg += `• ${i.product} - ${i.variant}`;
-    if (i.flavour) msg += ` (${i.flavour})`;
-    msg += ` × ${i.qty}\n\n`;
+  groupCart().forEach(g => {
+    msg += g.product + "\n";
+    g.items.forEach(i => {
+      msg += `• ${i.variant}${i.flavour ? ` (${i.flavour})` : ""} × ${i.qty}\n`;
+    });
+    msg += "\n";
   });
 
   window.open(
-    "https://wa.me/917093187617?text=" + encodeURIComponent(msg),
+    "https://wa.me/916305150766?text=" + encodeURIComponent(msg),
     "_blank"
   );
 };
@@ -263,4 +327,3 @@ renderCart();
 
 </body>
 </html>
-
