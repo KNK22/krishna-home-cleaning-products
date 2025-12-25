@@ -8,29 +8,38 @@
 <link rel="stylesheet" href="style.css" />
 
 <style>
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #fff;
-}
+/* =====================================================
+   CART HEADER (FIXED CENTER TITLE)
+===================================================== */
 
-/* HEADER */
 header {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px;
+  padding: 12px 14px;
   border-bottom: 1px solid #eee;
 }
 
-header button {
-  font-size: 22px;
-  background: none;
-  border: none;
-  cursor: pointer;
+/* Back button stays on left */
+header .back-btn {
+  position: relative;
+  z-index: 2;
 }
 
-/* CART LIST */
+/* TRUE CENTER TITLE */
+header h2 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 20px;        /* 🔥 bigger */
+  font-weight: 700;      /* 🔥 stronger */
+}
+
+/* =====================================================
+   CART LIST
+===================================================== */
+
 #cart {
   padding: 12px;
 }
@@ -51,10 +60,6 @@ header button {
   border-radius: 8px;
 }
 
-.cart-details {
-  min-width: 0;
-}
-
 .cart-details h4 {
   margin: 0 0 4px;
   font-size: 16px;
@@ -66,14 +71,11 @@ header button {
   color: #555;
 }
 
-/* QTY + PRICE */
 .cart-meta {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-top: 6px;
   font-weight: 600;
-  white-space: nowrap;
 }
 
 .cart-subtotal {
@@ -81,7 +83,6 @@ header button {
   font-weight: 600;
 }
 
-/* REMOVE */
 .remove-btn {
   width: 32px;
   height: 32px;
@@ -92,7 +93,10 @@ header button {
   cursor: pointer;
 }
 
-/* EMPTY STATE */
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
 .empty {
   text-align: center;
   padding: 40px 20px;
@@ -100,7 +104,10 @@ header button {
   font-size: 16px;
 }
 
-/* FOOTER */
+/* =====================================================
+   FOOTER TOTAL
+===================================================== */
+
 #totalBox {
   position: sticky;
   bottom: 0;
@@ -126,7 +133,6 @@ header button {
   cursor: pointer;
 }
 
-/* DISABLED BUTTON */
 #orderBtn:disabled {
   background: #aaa;
   cursor: not-allowed;
@@ -136,12 +142,30 @@ header button {
 
 <body>
 
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
 <header>
-  <button onclick="history.back()">←</button>
+  <button class="header-pill back-btn" onclick="history.back()">
+    ← Back
+  </button>
+
   <h2>Your Cart</h2>
+
+  <!-- Spacer to keep title centered -->
+  <div></div>
 </header>
 
+<!-- =====================================================
+     CART ITEMS
+===================================================== -->
+
 <div id="cart"></div>
+
+<!-- =====================================================
+     TOTAL & ORDER
+===================================================== -->
 
 <div id="totalBox">
   <div id="total">Total: ₹0</div>
@@ -151,18 +175,14 @@ header button {
 <script>
 let rawCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-/* NORMALIZE + MERGE */
+/* MERGE DUPLICATES */
 const merged = {};
 rawCart.forEach(item => {
   const key = `${item.product}_${item.variant}_${item.flavour || ""}`;
   if (!merged[key]) {
-    merged[key] = {
-      ...item,
-      qty: Number(item.qty) || 1,
-      price: Number(item.price) || 0
-    };
+    merged[key] = { ...item, qty: Number(item.qty), price: Number(item.price) };
   } else {
-    merged[key].qty += Number(item.qty) || 1;
+    merged[key].qty += Number(item.qty);
   }
 });
 
@@ -215,11 +235,9 @@ function renderCart() {
 }
 
 function removeItem(index) {
-  if (cart[index].qty > 1) {
-    cart[index].qty--;
-  } else {
-    cart.splice(index, 1);
-  }
+  if (cart[index].qty > 1) cart[index].qty--;
+  else cart.splice(index, 1);
+
   localStorage.setItem("cart", JSON.stringify(cart));
   renderCart();
 }
