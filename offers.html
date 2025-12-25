@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Today's Offers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SAME CSS AS HOMEPAGE -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body {
+      margin: 0;
+      background: #ffffff;
+      font-family: Arial, sans-serif;
+    }
+
+    .offers-page {
+      max-width: 1500px;
+      margin: auto;
+      padding: 24px 20px 60px;
+    }
+
+    /* ===== HEADER ===== */
+    .offers-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .back-btn {
+      padding: 12px 22px;
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      background: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* ===== GRID (3 CARDS) ===== */
+    .offers-wrapper {
+      display: grid;
+      grid-template-columns: repeat(3, 460px);
+      justify-content: center;
+      gap: 40px;
+    }
+
+    /* ===== CARD ===== */
+    .offer-card {
+      display: flex;
+      gap: 26px;
+      padding: 28px;
+      border: 2px dashed #22c55e;
+      border-radius: 28px;
+      background: #fff;
+    }
+
+    .hidden-offer {
+      display: none;
+    }
+
+    /* ===== IMAGE ===== */
+    .offer-img {
+      width: 160px;
+      height: 160px;
+      object-fit: cover;
+      background: #f0f0f0;
+      border-radius: 22px;
+      padding: 0px;
+      flex-shrink: 0;
+    }
+
+    /* ===== DETAILS ===== */
+    .offer-details {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .offer-details h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .offer-badge {
+      margin: 10px 0;
+      padding: 6px 14px;
+      background: #22c55e;
+      color: #fff;
+      border-radius: 999px;
+      font-size: 13px;
+      width: fit-content;
+    }
+
+    .offer-details ul {
+      padding-left: 18px;
+      margin: 12px 0;
+    }
+
+    .offer-details li {
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .offer-price {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .old-price {
+      font-size: 15px;
+      margin-left: 8px;
+      color: #888;
+      text-decoration: line-through;
+      font-weight: normal;
+    }
+
+    /* ===== BUTTON (LOCKED TO BOTTOM) ===== */
+    .offer-btn {
+      margin-top: auto;
+      padding: 10px 30px;
+      border-radius: 999px;
+      border: none;
+      background: #22c55e;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+      align-self: flex-start;
+      white-space: nowrap;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1200px) {
+      .offers-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .offers-wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="offers-page">
+
+  <!-- HEADER -->
+  <div class="offers-header">
+    <button class="back-btn" onclick="history.back()">← Back</button>
+
+    <!-- EXACT SAME CART BUTTON AS INDEX -->
+    <div class="cart-row">
+      <a href="cart.html" class="header-pill cart-btn" id="cartBtn">
+        🛒 Cart (0)
+      </a>
+    </div>
+  </div>
+
+  <!-- OFFERS -->
+  <div class="offers-wrapper">
+
+    <!-- OFFER 1 -->
+    <div class="offer-card">
+      <img src="images/offers/offer-pic.jpg" class="offer-img" />
+
+      <div class="offer-details">
+        <h2>Home Hygiene Combo</h2>
+        <span class="offer-badge">FREE Dishwash & Handwash</span>
+
+        <ul>
+          <li>Toilet Cleaner – 1 L</li>
+          <li>Floor Cleaner – 1 L</li>
+          <li>Dishwash – 250 ml (FREE)</li>
+          <li>Handwash – 250 ml (FREE)</li>
+        </ul>
+
+        <div class="offer-price">
+          ₹260 <span class="old-price">₹370</span>
+        </div>
+
+        <button class="offer-btn"
+          onclick="addComboToCart(
+            'combo-hygiene',
+            'Home Hygiene Combo',
+            260,
+            'images/offers/offer-pic.jpg',
+            [
+              'Toilet Cleaner – 1 L',
+              'Floor Cleaner – 1 L',
+              'Dishwash – 250 ml (FREE)',
+              'Handwash – 250 ml (FREE)'
+            ]
+          )">
+          Add Combo to Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- OFFER 2 -->
+    <div class="offer-card">
+      <img src="images/offers/offer-pic-2.jpg" class="offer-img" />
+
+      <div class="offer-details">
+        <h2>Floor Care Combo</h2>
+        <span class="offer-badge">Festival Special</span>
+
+        <ul>
+          <li>Floor Cleaner – 5 L</li>
+          <li>Phenyl – 1 L (FREE)</li>
+        </ul>
+
+        <div class="offer-price">
+          ₹499 <span class="old-price">₹600</span>
+        </div>
+
+        <button class="offer-btn"
+          onclick="addComboToCart(
+            'combo-floor',
+            'Floor Care Combo',
+            499,
+            'images/offers/offer-pic-2.jpg',
+            [
+              'Floor Cleaner – 5 L',
+              'Phenyl – 1 L (FREE)'
+            ]
+          )">
+          Add Combo to Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- OFFER 3 -->
+    <div class="offer-card">
+        <img src="images/offers/offer-pic-2.jpg" class="offer-img" />
+
+      <div class="offer-details">
+        <h2>Kitchen combo</h2>
+        <span class="offer-badge">Festival Special</span>
+
+        <ul>
+          <li>Dishwash – 1 L</li>
+          <li>Handwash – 250 ml (FREE)</li>
+        </ul>
+
+        <div class="offer-price">
+          ₹150 <span class="old-price">₹250</span>
+        </div>
+
+        <button class="offer-btn"
+          onclick="addComboToCart(
+            'combo-floor',
+            'Floor Care Combo',
+            499,
+            'images/offers/offer-pic-2.jpg',
+            [
+              'Floor Cleaner – 5 L',
+              'Phenyl – 1 L (FREE)'
+            ]
+          )">
+          Add Combo to Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- OFFER 4 -->     
+    <div class="offer-card">
+         <img src="images/offers/offer-pic-2.jpg" class="offer-img" />
+
+      <div class="offer-details">
+        <h2>Toilet Combo</h2>
+        <span class="offer-badge">Festival Special</span>
+
+        <ul>
+          <li>Toilet Cleaner – 1 L</li>
+          <li>Toilet Cleaner – 1 L (FREE)</li>
+        </ul>
+
+        <div class="offer-price">
+          ₹150 <span class="old-price">₹400</span>
+        </div>
+
+        <button class="offer-btn"
+          onclick="addComboToCart(
+            'combo-floor',
+            'Floor Care Combo',
+            499,
+            'images/offers/offer-pic-2.jpg',
+            [
+              'Floor Cleaner – 5 L',
+              'Phenyl – 1 L (FREE)'
+            ]
+          )">
+          Add Combo to Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- OFFER 5 -->
+    <div class="offer-card hidden-offer">
+         <img src="images/offers/offer-pic-2.jpg" class="offer-img" />
+
+      <div class="offer-details">
+        <h2>Floor Care Combo</h2>
+        <span class="offer-badge">Festival Special</span>
+
+        <ul>
+          <li>Floor Cleaner – 5 L</li>
+          <li>Phenyl – 1 L (FREE)</li>
+        </ul>
+
+        <div class="offer-price">
+          ₹499 <span class="old-price">₹600</span>
+        </div>
+
+        <button class="offer-btn"
+          onclick="addComboToCart(
+            'combo-floor',
+            'Floor Care Combo',
+            499,
+            'images/offers/offer-pic-2.jpg',
+            [
+              'Floor Cleaner – 5 L',
+              'Phenyl – 1 L (FREE)'
+            ]
+          )">
+          Add Combo to Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- OFFER 6 -->
+    <div class="offer-card hidden-offer">
+         <img src="images/offers/offer-pic-2.jpg" class="offer-img" />
+
+      <div class="offer-details">
+        <h2>Floor Care Combo</h2>
+        <span class="offer-badge">Festival Special</span>
+
+        <ul>
+          <li>Floor Cleaner – 5 L</li>
+          <li>Phenyl – 1 L (FREE)</li>
+        </ul>
+
+        <div class="offer-price">
+          ₹499 <span class="old-price">₹600</span>
+        </div>
+
+        <button class="offer-btn"
+          onclick="addComboToCart(
+            'combo-floor',
+            'Floor Care Combo',
+            499,
+            'images/offers/offer-pic-2.jpg',
+            [
+              'Floor Cleaner – 5 L',
+              'Phenyl – 1 L (FREE)'
+            ]
+          )">
+          Add Combo to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function addComboToCart(id, name, price, image, items) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const existing = cart.find(item => item.id === id);
+
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({
+      id,
+      name,
+      price,
+      image,
+      qty: 1,
+      type: "combo",
+      items
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+  alert("✅ Product added to cart");
+}
+
+function updateCartCount() {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+  const btn = document.getElementById("cartBtn");
+  if (btn) btn.innerText = `🛒 Cart (${count})`;
+}
+
+document.addEventListener("DOMContentLoaded", updateCartCount);
+window.addEventListener("focus", updateCartCount);
+</script>
+
+</body>
+</html>
