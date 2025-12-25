@@ -1,85 +1,142 @@
-/* ================================
+/* =========================================
    SINGLE SOURCE OF TRUTH – DATA.JS
-   ================================ */
+   Products + Combo Offers
+   ========================================= */
+
+
+/* =====================
+   NORMAL PRODUCTS
+   ===================== */
 
 const PRODUCTS = {
-  "phenyl": {
+  phenyl: {
     id: "phenyl",
     name: "Phenyl",
     imageFolder: "phenyl",
-    basePrice: 100,
     variants: {
-      "1 L": { mrp: 130, price: 100 },
-      "5 L": { mrp: 400, price: 350 }
+      "1 L": { price: 100, mrp: 130 },
+      "5 L": { price: 350, mrp: 500 }
     },
     flavours: ["Rose", "Lemon", "Plain"],
     description:
-      "Krishna Phenyl is a powerful disinfectant floor cleaner designed for daily use. It effectively removes germs, dirt, and unpleasant odors, leaving your home fresh, hygienic, and safe for family use.",
+      "Krishna Phenyl is a powerful disinfectant floor cleaner suitable for daily use.",
     howToUse:
-      "Add 1–2 caps of phenyl to a bucket of water. Mop the floor evenly. No rinsing required. Suitable for regular cleaning of tiles, marble, and cement floors."
+      "Add 1–2 caps in a bucket of water and mop the floor."
   },
 
   "floor-cleaner": {
     id: "floor-cleaner",
     name: "Floor Cleaner",
     imageFolder: "floor-cleaner",
-    basePrice: 100,
     variants: {
-      "1 L": { mrp: 130, price: 100 },
-      "5 L": { mrp: 600, price: 400 }
+      "1 L": { price: 130, mrp: 200 },
+      "5 L": { price: 500, mrp: 600 }
     },
     flavours: ["Lavender", "Sandalwood"],
     description:
-      "Krishna Floor Cleaner is formulated to remove tough stains, dirt, and bacteria while leaving a long-lasting fragrance. Ideal for homes, offices, hospitals, and commercial spaces.",
+      "Removes tough stains and leaves a long-lasting fragrance.",
     howToUse:
-      "Mix 1–2 caps in a bucket of water. Mop the surface thoroughly. For heavily soiled areas, use a slightly higher concentration."
+      "Mix 1–2 caps in water and mop evenly."
   },
 
-  "dishwash": {
+  dishwash: {
     id: "dishwash",
     name: "Dishwash Liquid",
     imageFolder: "dishwash",
-    basePrice: 150,
     variants: {
-      "1 L": { mrp: 200, price: 150 },
-      "5 L": { mrp: 600, price: 450 }
+      "1 L": { price: 150, mrp: 200 },
+      "5 L": { price: 450, mrp: 600 }
     },
     flavours: [],
     description:
-      "Krishna Dishwash Liquid effectively cuts through grease and removes food residue while being gentle on hands. Leaves utensils sparkling clean with a fresh lemon fragrance.",
+      "Cuts grease effectively and is gentle on hands.",
     howToUse:
-      "Add a few drops to a wet sponge or mix with water. Scrub utensils and rinse thoroughly with clean water."
+      "Apply a few drops on sponge and clean utensils."
   },
 
-  "handwash": {
+  handwash: {
     id: "handwash",
     name: "Handwash",
     imageFolder: "handwash",
-    basePrice: 100,
     variants: {
-      "1 L": { mrp: 130, price: 100 },
-      "5 L": { mrp: 500, price: 400 }
+      "1 L": { price: 100, mrp: 130 },
+      "5 L": { price: 400, mrp: 500 }
     },
     flavours: [],
     description:
-      "Krishna Handwash provides effective germ protection while keeping hands soft and moisturized. Suitable for frequent use by the entire family.",
+      "Kills germs while keeping hands soft.",
     howToUse:
-      "Apply a small amount on wet hands. Lather well for at least 20 seconds and rinse thoroughly with water."
+      "Apply on wet hands, lather for 20 seconds and rinse."
   },
 
   "toilet-cleaner": {
     id: "toilet-cleaner",
     name: "Toilet Cleaner",
     imageFolder: "toilet-cleaner",
-    basePrice: 100,
     variants: {
-      "1 L": { mrp: 130, price: 100 },
-      "5 L": { mrp: 500, price: 400 }
+      "1 L": { price: 130, mrp: 200 },
+      "5 L": { price: 500, mrp: 600 }
     },
     flavours: [],
     description:
-      "Krishna Toilet Cleaner removes tough stains, kills germs, and eliminates bad odors. Its thick formula clings to surfaces for deep cleaning and freshness.",
+      "Removes stains and kills 99.9% germs.",
     howToUse:
-      "Pour the cleaner around the toilet bowl and under the rim. Leave for 10–15 minutes, scrub with a brush, and flush."
+      "Pour under rim, wait 10 minutes, scrub and flush."
   }
 };
+
+
+/* =====================
+   COMBO / OFFER PRODUCTS
+   ===================== */
+
+const COMBO_OFFERS = [
+  {
+    id: "home-hygiene-combo",
+
+    /* 🔹 CHANGE THIS TO:
+       "Festive Offers"
+       "Today’s Deals"
+       "Special Combo"
+    */
+    sectionTitle: "Combo Offers",
+
+    title: "Home Hygiene Combo",
+    badge: "FREE Dishwash & Handwash",
+
+    /* 🔹 IMAGES (ONLY CHANGE FILES, NOT CODE) */
+    images: {
+      homepage: "images/offers/offer-homepage.jpg",
+      detail: "images/offers/offer-pic.jpg"
+    },
+
+    /* 🔹 PRICE CONTROL */
+    price: 199,
+    mrp: 260,
+
+    /* 🔹 WHAT CUSTOMER GETS */
+    items: [
+      { name: "Phenyl", qty: "1 L" },
+      { name: "Floor Cleaner", qty: "1 L" }
+    ],
+
+    freeItems: [
+      { name: "Dishwash", qty: "250 ml" },
+      { name: "Handwash", qty: "250 ml" }
+    ],
+
+    description:
+      "Best value combo for complete home hygiene. Ideal for daily cleaning needs.",
+
+    howToUse:
+      "Use phenyl and floor cleaner as directed. Free products included with every combo."
+  }
+];
+
+
+/* =====================
+   EXPORT (GLOBAL)
+   ===================== */
+
+window.PRODUCTS = PRODUCTS;
+window.COMBO_OFFERS = COMBO_OFFERS;
