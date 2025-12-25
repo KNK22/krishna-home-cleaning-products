@@ -150,10 +150,23 @@ header h2 {
 
 <body>
 
-<header>
-  <button class="header-pill" onclick="history.back()">← Back</button>
-  <h2>Your Cart</h2>
+<header style="flex-direction:column; align-items:center; gap:4px;">
+  <button class="header-pill" style="position:absolute; left:16px;" onclick="history.back()">← Back</button>
+
+  <h2 style="position:static; transform:none; margin:0;">
+    Your Cart
+  </h2>
+
+  <div style="font-size:16px; color:#2e7d32; font-weight:600;">
+    Free delivery in Visakhapatnam
+  </div>
+
+  <div style="font-size:15px; color:#777;">
+    (Limited time only)
+  </div>
 </header>
+
+
 
 <div id="cart"></div>
 
@@ -353,6 +366,17 @@ document.getElementById("orderBtn").onclick = () => {
 
 renderCart();
 </script>
+
+<footer style="
+  text-align:center;
+  padding:16px 12px;
+  font-size:25px;
+  color:#555;
+  border-top:1px solid #eee;
+  margin-top:40px;
+">
+  REPACKED &amp; MARKETED BY KRISHNA
+</footer>
 
 </body>
 </html>
