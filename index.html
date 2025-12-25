@@ -106,21 +106,54 @@
 
   <div class="festive-home-box">
 
-    <!-- FESTIVE IMAGE (CHANGE IMAGE FILE ONLY) -->
+    <!-- FESTIVE IMAGE -->
     <div
       class="festive-home-image"
-      style="background-image: url('./images/offers/offer-homepage.jpg');"
+      style="background-image: url('./images/offers/offer-homepage.jpg'); position:relative;"
     >
+
+      <!-- ===============================
+           FESTIVE OFFER STATUS (EDIT THIS)
+           =============================== -->
+      <div style="
+        position:absolute;
+        top:12px;
+        right:12px;
+        background:#dc2626;
+        color:#fff;
+        height:32px;
+        padding:0 14px;          /* ✅ left & right spacing */
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;                 /* ✅ space between dot & text */
+        border-radius:999px;
+        font-size:13px;
+        font-weight:600;
+        white-space:nowrap;      /* ✅ keeps pill clean */
+        ">
+
+        <span style="
+          width:8px;
+          height:8px;
+          background:#fff;
+          border-radius:50%;
+          display:inline-block;
+        "></span>
+        <span>LIVE</span>
+      </div>
+
     </div>
 
-    <!-- BUTTON -->
+    <!-- BUTTON (RESTORED TO ORIGINAL POSITION) -->
     <a href="offers.html" class="festive-home-btn">
-      View Today’s offers 
+      View Today’s offers
     </a>
 
   </div>
 
 </div>
+
 
 <!-- =====================================================
      NORMAL PRODUCTS GRID (DO NOT TOUCH)
@@ -172,6 +205,17 @@
     grid.appendChild(card);
   });
 </script>
+
+<footer style="
+  text-align:center;
+  padding:16px 12px;
+  font-size:25px;
+  color:#555;
+  border-top:1px solid #eee;
+  margin-top:40px;
+">
+  REPACKED &amp; MARKETED BY KRISHNA
+</footer>
 
 </body>
 </html>
