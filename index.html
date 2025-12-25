@@ -1,62 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Krishna Home Cleaning Products</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#4CAF50">
+<meta name="theme-color" content="#2e7d32">
 
 <link rel="stylesheet" href="style.css">
-
-<style>
-/* keeping your existing inline styles */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #fff;
-}
-</style>
 </head>
 
 <body>
 
-<!-- HEADER -->
+<!-- =====================================================
+     HEADER
+     Brand name + trust indicators
+===================================================== -->
+
 <div class="header">
-  <div class="header-title">Krishna Home Cleaning Products</div>
+  <div class="header-title">
+    Krishna Home Cleaning Products
+  </div>
 
   <div class="trust-strip">
-    ✔ Hygienic & Safe &nbsp; • &nbsp; ✔ Trusted Quality &nbsp; • &nbsp; ✔ Affordable Prices
+    ✔ Hygienic & Safe &nbsp; • &nbsp;
+    ✔ Trusted Quality &nbsp; • &nbsp;
+    ✔ Affordable Prices
   </div>
 </div>
 
 <hr class="header-divider">
 
-<!-- CART -->
+<!-- =====================================================
+     CART (Homepage)
+     Uses shared cart pill style
+===================================================== -->
+
 <div class="cart-row">
-  <a href="cart.html" class="cart-btn" id="cartBtn">🛒 Cart (0)</a>
+  <a href="cart.html" class="header-pill cart-btn" id="cartBtn">
+    🛒 Cart (0)
+  </a>
 </div>
 
-<!-- PRODUCTS -->
+<!-- =====================================================
+     PRODUCTS GRID
+===================================================== -->
+
 <div class="grid" id="grid"></div>
 
-<!-- DATA -->
+<!-- =====================================================
+     DATA SOURCE
+===================================================== -->
+
 <script src="data.js"></script>
 
 <script>
-/* ================= CART COUNT ================= */
+/* =====================================================
+   CART COUNT UPDATE
+===================================================== */
+
 function updateCartCount() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   let count = 0;
   cart.forEach(item => count += Number(item.qty) || 0);
-  document.getElementById("cartBtn").innerText = "🛒 Cart (" + count + ")";
+  document.getElementById("cartBtn").innerText =
+    "🛒 Cart (" + count + ")";
 }
 
 document.addEventListener("DOMContentLoaded", updateCartCount);
 window.addEventListener("focus", updateCartCount);
 window.addEventListener("storage", updateCartCount);
 
-/* ================= RENDER PRODUCTS ================= */
+/* =====================================================
+   RENDER PRODUCTS FROM data.js
+===================================================== */
+
 const grid = document.getElementById("grid");
 
 Object.values(PRODUCTS).forEach(p => {
@@ -64,7 +82,10 @@ Object.values(PRODUCTS).forEach(p => {
   card.className = "card";
 
   card.innerHTML = `
-    <div class="img-box" style="background-image:url('./images/${p.imageFolder}/cover.jpg')"></div>
+    <div class="img-box"
+         style="background-image:url('./images/${p.imageFolder}/cover.jpg')">
+    </div>
+
     <h3>${p.name}</h3>
     <p>From ₹${p.basePrice}</p>
   `;
