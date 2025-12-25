@@ -185,11 +185,21 @@ const DATA = {
   }
 };
 
-/* ---------- HELPERS ---------- */
-function getCart(){ return JSON.parse(localStorage.getItem("cart")) || []; }
-function saveCart(c){ localStorage.setItem("cart",JSON.stringify(c)); updateCart(); }
+/* ---------- CART HELPERS (FIXED) ---------- */
+function getCart(){
+  return JSON.parse(localStorage.getItem("cart")) || [];
+}
+
+function saveCart(cart){
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCart();
+}
+
 function updateCart(){
-  document.getElementById("cartBox").innerText = "CART ("+getCart().length+")";
+  const cart = getCart();
+  let count = 0;
+  cart.forEach(i => count += Number(i.qty) || 0);
+  document.getElementById("cartBox").innerText = "CART (" + count + ")";
 }
 
 /* ---------- LOAD PRODUCT ---------- */
@@ -264,17 +274,26 @@ function checkReady(){
   }
 }
 
-/* ---------- ADD TO CART ---------- */
+/* ---------- ADD TO CART (CORRECTED) ---------- */
 function addToCart(){
   const cart = getCart();
   const unitPrice = product.variants[variant].price;
 
-  for(let i = 0; i < qty; i++){
+  const existing = cart.find(i =>
+    i.product === product.name &&
+    i.variant === variant &&
+    i.flavour === flavour
+  );
+
+  if(existing){
+    existing.qty += qty;
+  } else {
     cart.push({
       product: product.name,
       variant: variant,
       flavour: flavour,
       price: unitPrice,
+      qty: qty,
       image: `./images/${id}/cover.jpg`
     });
   }
@@ -283,7 +302,10 @@ function addToCart(){
   alert("Added to cart");
 }
 
-updateCart();
+/* SYNC CART COUNT */
+document.addEventListener("DOMContentLoaded", updateCart);
+window.addEventListener("focus", updateCart);
+window.addEventListener("storage", updateCart);
 </script>
 
 <!-- PWA SERVICE WORKER -->
