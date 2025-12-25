@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Your Cart</title>
 
 <style>
-/* =====================================================
+/* ===============================
    GLOBAL
-===================================================== */
+=============================== */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #fff;
-  color: #000;
 }
 
-/* =====================================================
+/* ===============================
    HEADER
-===================================================== */
+=============================== */
 header {
   position: relative;
   display: flex;
@@ -27,7 +26,7 @@ header {
   border-bottom: 1px solid #eee;
 }
 
-.header-pill {
+.header-btn {
   padding: 10px 18px;
   border-radius: 999px;
   border: 1px solid #ccc;
@@ -42,36 +41,35 @@ header h2 {
   transform: translateX(-50%);
   margin: 0;
   font-size: 22px;
-  font-weight: 700;
 }
 
-/* =====================================================
-   CART WRAPPER
-===================================================== */
+/* ===============================
+   CART CONTAINER
+=============================== */
 #cart {
-  padding: 16px;
   max-width: 1000px;
-  margin: 0 auto;
+  margin: auto;
+  padding: 16px;
 }
 
-/* =====================================================
+/* ===============================
    EMPTY CART
-===================================================== */
+=============================== */
 .empty-cart {
   text-align: center;
-  color: #666;
   margin: 60px 0;
-  font-size: 18px;
+  color: #666;
+  font-size: 16px;
 }
 
-/* =====================================================
+/* ===============================
    CART ITEM
-===================================================== */
+=============================== */
 .cart-item {
   display: grid;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: 140px 1fr auto;
   gap: 20px;
-  padding: 16px 0;
+  padding: 18px 0;
   border-bottom: 1px solid #eee;
 }
 
@@ -79,26 +77,31 @@ header h2 {
   width: 140px;
   height: 140px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 14px;
 }
 
-.cart-details h4 {
-  margin: 0 0 10px;
+/* ===============================
+   ITEM DETAILS
+=============================== */
+.cart-info h4 {
+  margin: 0 0 6px;
   font-size: 20px;
-  font-weight: 700;
 }
 
-/* =====================================================
-   VARIANT ROW
-===================================================== */
-.variant-row {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: 16px;
-  padding: 6px 0;
+.cart-info ul {
+  margin: 6px 0 0 18px;
+  padding: 0;
+  color: #555;
+  font-size: 14px;
 }
 
+.cart-info li {
+  margin-bottom: 4px;
+}
+
+/* ===============================
+   QTY + PRICE
+=============================== */
 .qty-box {
   display: flex;
   align-items: center;
@@ -114,61 +117,48 @@ header h2 {
   cursor: pointer;
 }
 
-.qty-box button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
 .qty-box span {
   min-width: 16px;
   text-align: center;
   font-weight: 600;
 }
 
-.variant-price {
-  min-width: 80px;
+.item-price {
+  margin-top: 8px;
   text-align: right;
-  font-weight: 600;
-}
-
-.cart-subtotal {
-  margin-top: 10px;
   font-weight: 700;
+  font-size: 16px;
 }
 
-/* =====================================================
+/* ===============================
    FOOTER
-===================================================== */
+=============================== */
 #totalBox {
-  position: sticky;
-  bottom: 0;
-  background: #fff;
-  padding: 16px;
-  border-top: 1px solid #eee;
   max-width: 1000px;
-  margin: 0 auto;
+  margin: auto;
+  padding: 18px 16px;
+  border-top: 1px solid #eee;
 }
 
 #total {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 #orderBtn {
   width: 100%;
   padding: 16px;
   font-size: 18px;
-  font-weight: 700;
   background: #22c55e;
   color: #fff;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
 }
 
 #orderBtn:disabled {
-  background: #bdbdbd;
+  background: #bbb;
   cursor: not-allowed;
 }
 </style>
@@ -176,48 +166,27 @@ header h2 {
 
 <body>
 
-<!-- ================= HEADER ================= -->
 <header>
-  <button class="header-pill" onclick="history.back()">← Back</button>
+  <button class="header-btn" onclick="history.back()">← Back</button>
   <h2>Your Cart</h2>
 </header>
 
-<!-- ================= CART ================= -->
 <div id="cart"></div>
 
-<!-- ================= FOOTER ================= -->
 <div id="totalBox">
   <div id="total">Total: ₹0</div>
-  <button id="orderBtn">Place Order</button>
+  <button id="orderBtn" disabled>Place Order</button>
 </div>
 
 <script>
-/* =====================================================
+/* ===============================
    LOAD CART
-===================================================== */
+=============================== */
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-/* =====================================================
-   GROUP CART BY PRODUCT
-===================================================== */
-function groupCart() {
-  const grouped = {};
-  cart.forEach(item => {
-    if (!grouped[item.product]) {
-      grouped[item.product] = {
-        product: item.product,
-        image: item.image,
-        items: []
-      };
-    }
-    grouped[item.product].items.push(item);
-  });
-  return Object.values(grouped);
-}
-
-/* =====================================================
+/* ===============================
    RENDER CART
-===================================================== */
+=============================== */
 function renderCart() {
   const cartBox = document.getElementById("cart");
   const totalEl = document.getElementById("total");
@@ -228,7 +197,7 @@ function renderCart() {
   if (cart.length === 0) {
     cartBox.innerHTML = `
       <div class="empty-cart">
-        🛒 <br><br>
+        🛒<br><br>
         <strong>Your cart is empty.</strong><br>
         Add products to continue.
       </div>
@@ -238,82 +207,65 @@ function renderCart() {
     return;
   }
 
+  let total = 0;
   orderBtn.disabled = false;
 
-  let groups = groupCart();
-  let grandTotal = 0;
-
-  groups.forEach(group => {
-    let productTotal = 0;
-
-    const rows = group.items.map((item, i) => {
-      const subtotal = item.qty * item.price;
-      productTotal += subtotal;
-      grandTotal += subtotal;
-
-      return `
-        <div class="variant-row">
-          <div>${item.variant}${item.flavour ? ` (${item.flavour})` : ""}</div>
-
-          <div class="qty-box">
-            <button onclick="updateQty('${group.product}', ${i}, -1)">−</button>
-            <span>${item.qty}</span>
-            <button onclick="updateQty('${group.product}', ${i}, 1)">+</button>
-          </div>
-
-          <div class="variant-price">₹${subtotal}</div>
-        </div>
-      `;
-    }).join("");
+  cart.forEach((item, index) => {
+    const subtotal = item.price * item.qty;
+    total += subtotal;
 
     cartBox.innerHTML += `
       <div class="cart-item">
-        <img src="${group.image}">
-        <div class="cart-details">
-          <h4>${group.product}</h4>
-          ${rows}
-          <div class="cart-subtotal">Subtotal: ₹${productTotal}</div>
+        <img src="${item.image}">
+        
+        <div class="cart-info">
+          <h4>${item.name}</h4>
+
+          ${
+            item.type === "combo" && item.items
+              ? `<ul>
+                  ${item.items.map(i => `<li>${i}</li>`).join("")}
+                </ul>`
+              : ""
+          }
+        </div>
+
+        <div>
+          <div class="qty-box">
+            <button onclick="changeQty(${index}, -1)">−</button>
+            <span>${item.qty}</span>
+            <button onclick="changeQty(${index}, 1)">+</button>
+          </div>
+          <div class="item-price">₹${subtotal}</div>
         </div>
       </div>
     `;
   });
 
-  totalEl.innerText = "Total: ₹" + grandTotal;
+  totalEl.innerText = "Total: ₹" + total;
 }
 
-/* =====================================================
-   UPDATE QUANTITY
-   - If qty becomes 0 → REMOVE item
-===================================================== */
-function updateQty(product, index, change) {
-  const groups = groupCart();
-  const group = groups.find(g => g.product === product);
-  if (!group) return;
+/* ===============================
+   CHANGE QTY
+=============================== */
+function changeQty(index, diff) {
+  cart[index].qty += diff;
 
-  const item = group.items[index];
-  if (!item) return;
-
-  item.qty += change;
-
-  // ❌ remove items with qty <= 0
-  cart = cart.filter(i => i.qty > 0);
+  if (cart[index].qty <= 0) {
+    cart.splice(index, 1);
+  }
 
   localStorage.setItem("cart", JSON.stringify(cart));
   renderCart();
 }
 
-/* =====================================================
-   PLACE ORDER (WhatsApp)
-===================================================== */
+/* ===============================
+   PLACE ORDER (WHATSAPP)
+=============================== */
 document.getElementById("orderBtn").onclick = () => {
-  let msg = "Order Details\n\n";
-
-  groupCart().forEach(g => {
-    msg += g.product + "\n";
-    g.items.forEach(i => {
-      msg += `• ${i.variant}${i.flavour ? ` (${i.flavour})` : ""} × ${i.qty}\n`;
-    });
-    msg += "\n";
+  let msg = "Order Details:\n\n";
+  cart.forEach(item => {
+    msg += `${item.name} × ${item.qty}\n`;
   });
 
   window.open(
@@ -327,4 +279,3 @@ renderCart();
 
 </body>
 </html>
-
