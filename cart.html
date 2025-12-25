@@ -66,7 +66,7 @@ header button {
   color: #555;
 }
 
-/* QTY + PRICE GROUP */
+/* QTY + PRICE */
 .cart-meta {
   display: flex;
   align-items: center;
@@ -81,7 +81,7 @@ header button {
   font-weight: 600;
 }
 
-/* REMOVE BUTTON */
+/* REMOVE */
 .remove-btn {
   width: 32px;
   height: 32px;
@@ -90,10 +90,17 @@ header button {
   font-size: 18px;
   background: #fff;
   cursor: pointer;
-  flex-shrink: 0;
 }
 
-/* TOTAL BAR */
+/* EMPTY STATE */
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* FOOTER */
 #totalBox {
   position: sticky;
   bottom: 0;
@@ -118,6 +125,12 @@ header button {
   border-radius: 8px;
   cursor: pointer;
 }
+
+/* DISABLED BUTTON */
+#orderBtn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
 </style>
 </head>
 
@@ -132,51 +145,62 @@ header button {
 
 <div id="totalBox">
   <div id="total">Total: ₹0</div>
-  <button id="orderBtn" onclick="placeOrder()">Place Order</button>
+  <button id="orderBtn" disabled>Place Order</button>
 </div>
 
 <script>
-/* LOAD CART */
 let rawCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-/* MERGE SAME ITEMS (CRITICAL FIX) */
+/* NORMALIZE + MERGE */
 const merged = {};
 rawCart.forEach(item => {
-  const key = `${item.name}_${item.variant}_${item.flavour || ""}`;
+  const key = `${item.product}_${item.variant}_${item.flavour || ""}`;
   if (!merged[key]) {
-    merged[key] = { ...item, qty: Number(item.qty) || 1 };
+    merged[key] = {
+      ...item,
+      qty: Number(item.qty) || 1,
+      price: Number(item.price) || 0
+    };
   } else {
     merged[key].qty += Number(item.qty) || 1;
   }
 });
+
 let cart = Object.values(merged);
 localStorage.setItem("cart", JSON.stringify(cart));
 
 function renderCart() {
   const box = document.getElementById("cart");
+  const totalEl = document.getElementById("total");
+  const orderBtn = document.getElementById("orderBtn");
+
   box.innerHTML = "";
   let total = 0;
 
   if (cart.length === 0) {
-    box.innerHTML = "<p>Your cart is empty.</p>";
-    document.getElementById("total").innerText = "Total: ₹0";
+    box.innerHTML = `
+      <div class="empty">
+        🛒 Your cart is empty.<br><br>
+        Add products to continue.
+      </div>
+    `;
+    totalEl.innerText = "Total: ₹0";
+    orderBtn.disabled = true;
     return;
   }
 
   cart.forEach((item, index) => {
-    const price = Number(item.price) || 0;
-    const qty = Number(item.qty) || 1;
-    const subtotal = price * qty;
+    const subtotal = item.price * item.qty;
     total += subtotal;
 
     box.innerHTML += `
       <div class="cart-item">
         <img src="${item.image}" />
         <div class="cart-details">
-          <h4>${item.name}</h4>
+          <h4>${item.product}</h4>
           <p>${item.variant}${item.flavour ? ` (${item.flavour})` : ""}</p>
           <div class="cart-meta">
-            <span>× ${qty}</span>
+            <span>× ${item.qty}</span>
             <span>₹${subtotal}</span>
           </div>
           <div class="cart-subtotal">Subtotal: ₹${subtotal}</div>
@@ -186,7 +210,8 @@ function renderCart() {
     `;
   });
 
-  document.getElementById("total").innerText = `Total: ₹${total}`;
+  totalEl.innerText = "Total: ₹" + total;
+  orderBtn.disabled = false;
 }
 
 function removeItem(index) {
@@ -199,23 +224,24 @@ function removeItem(index) {
   renderCart();
 }
 
-function placeOrder() {
+document.getElementById("orderBtn").onclick = function () {
+  if (cart.length === 0) return;
+
   let msg = "Order\n\n";
   cart.forEach(i => {
-    msg += `• ${i.name} - ${i.variant}`;
+    msg += `• ${i.product} - ${i.variant}`;
     if (i.flavour) msg += ` (${i.flavour})`;
     msg += ` × ${i.qty}\n\n`;
   });
 
   window.open(
-    "https://wa.me/917093187617?text=" + encodeURIComponent(msg),
+    "https://wa.me/916305150766?text=" + encodeURIComponent(msg),
     "_blank"
   );
-}
+};
 
 renderCart();
 </script>
 
 </body>
 </html>
-
