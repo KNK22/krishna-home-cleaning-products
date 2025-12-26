@@ -110,8 +110,14 @@ function updateImage() {
 
   if (variant && flavour) {
     const v = variant.toLowerCase().replace(/\s+/g, "");
-const f = flavour.toLowerCase().trim(); // trim() removes spaces at the start/end
-    img = `${v}-${f}.jpg`;
+    const f = flavour.toLowerCase();
+
+    // 🔥 SPECIAL FIX: phenyl 1L lemon
+    if (product.id === "phenyl" && v === "1l" && f === "lemon") {
+      img = "nl-lemon.jpg";
+    } else {
+      img = `${v}-${f}.jpg`;
+    }
   }
 
   document.getElementById("image").style.backgroundImage =
