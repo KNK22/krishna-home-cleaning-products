@@ -276,7 +276,23 @@ function addComboFromCard(btn) {
 
   localStorage.setItem("cart", JSON.stringify(cart));
   updateCartCount();
-  alert("✅ Combo added to cart");
+
+  /* ===== NEW BUTTON ANIMATION (ONLY CHANGE) ===== */
+  const originalText = btn.innerText;
+
+  btn.innerText = "✓ Added";
+  btn.style.background = "#16a34a";
+  btn.style.transform = "scale(1.05)";
+  btn.style.transition = "transform 0.15s ease, background 0.15s ease";
+
+  setTimeout(() => {
+    btn.style.transform = "scale(1)";
+  }, 150);
+
+  setTimeout(() => {
+    btn.innerText = originalText;
+    btn.style.background = "";
+  }, 900);
 }
 
 function updateCartCount() {
