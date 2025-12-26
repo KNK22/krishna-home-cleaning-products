@@ -1,4 +1,4 @@
-const CACHE_NAME = "krishna-mart-v1";
+const CACHE_NAME = "krishna-mart-v2";
 
 const FILES_TO_CACHE = [
   "./",
@@ -33,3 +33,4 @@ self.addEventListener("fetch", event => {
     caches.match(event.request).then(res => res || fetch(event.request))
   );
 });
+
