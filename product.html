@@ -104,13 +104,13 @@ function updateImage() {
   let img = "cover.jpg";
 
   if (variant) {
-    const v = variant.toLowerCase().replace(" ", "");
+    const v = variant.toLowerCase().replace(/\s+/g, "");
     img = v + ".jpg";
   }
 
   if (variant && flavour) {
-    const v = variant.toLowerCase().replace(" ", "");
-    const f = flavour.toLowerCase();
+    const v = variant.toLowerCase().replace(/\s+/g, "");
+const f = flavour.toLowerCase().trim(); // trim() removes spaces at the start/end
     img = `${v}-${f}.jpg`;
   }
 
