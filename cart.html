@@ -13,12 +13,16 @@ body {
   color: #000;
 }
 
+/* ===== HEADER ===== */
+
 header {
-  position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 4px;
   padding: 14px 16px;
   border-bottom: 1px solid #eee;
+  position: relative;
 }
 
 .header-pill {
@@ -28,16 +32,18 @@ header {
   background: #fff;
   font-weight: 600;
   cursor: pointer;
+  position: absolute;
+  left: 16px;
+  top: 14px;
 }
 
 header h2 {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   margin: 0;
   font-size: 22px;
   font-weight: 700;
 }
+
+/* ===== CART ===== */
 
 #cart {
   padding: 16px;
@@ -52,33 +58,36 @@ header h2 {
   font-size: 18px;
 }
 
-.cart-item {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 20px;
-  padding: 16px 0;
-  border-bottom: 1px solid #eee;
+/* ===== PRODUCT GROUP ===== */
+
+.cart-group {
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
 }
 
-.cart-item img {
-  width: 140px;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.cart-details h4 {
-  margin: 0 0 10px;
+.cart-group h3 {
+  margin: 0 0 14px;
   font-size: 20px;
   font-weight: 700;
 }
 
-.variant-row {
+.cart-row {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 90px 1fr auto auto;
   align-items: center;
-  gap: 16px;
-  padding: 6px 0;
+  gap: 14px;
+  padding: 10px 0;
+}
+
+/* 🔥 BIGGER IMAGE FOR ALL ITEMS */
+.cart-row img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #f2f2f2;
 }
 
 .qty-box {
@@ -88,8 +97,8 @@ header h2 {
 }
 
 .qty-box button {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border: 1px solid #aaa;
   border-radius: 6px;
   background: #fff;
@@ -102,16 +111,35 @@ header h2 {
   font-weight: 600;
 }
 
-.variant-price {
+.price {
+  font-weight: 600;
   min-width: 80px;
   text-align: right;
-  font-weight: 600;
 }
 
-.cart-subtotal {
-  margin-top: 10px;
+.group-subtotal {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
   font-weight: 700;
 }
+
+/* ===== TOTAL ALIGN ===== */
+
+#totalRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#total {
+  width: 140px;
+  text-align: right;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* ===== TOTAL BOX ===== */
 
 #totalBox {
   position: sticky;
@@ -121,12 +149,6 @@ header h2 {
   border-top: 1px solid #eee;
   max-width: 1000px;
   margin: 0 auto;
-}
-
-#total {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 12px;
 }
 
 #orderBtn {
@@ -150,12 +172,10 @@ header h2 {
 
 <body>
 
-<header style="flex-direction:column; align-items:center; gap:4px;">
-  <button class="header-pill" style="position:absolute; left:16px;" onclick="history.back()">← Back</button>
+<header>
+  <button class="header-pill" onclick="history.back()">← Back</button>
 
-  <h2 style="position:static; transform:none; margin:0;">
-    Your Cart
-  </h2>
+  <h2>Your Cart</h2>
 
   <div style="font-size:16px; color:#2e7d32; font-weight:600;">
     Free delivery in Visakhapatnam
@@ -166,53 +186,26 @@ header h2 {
   </div>
 </header>
 
-
-
 <div id="cart"></div>
 
 <div id="totalBox">
-  <div id="total">Total: ₹0</div>
+  <div id="totalRow">
+    <div id="total">Total: ₹0</div>
+  </div>
   <button id="orderBtn">Place Order</button>
 </div>
 
 <script>
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-/* ================= GROUP CART ================= */
-function groupCart() {
-  const grouped = {};
-
-  cart.forEach(item => {
-
-    if (item.type === "combo") {
-      grouped[item.id] = {
-        isCombo: true,
-        id: item.id,
-        name: item.name,
-        image: item.image,
-        price: item.price,
-        qty: item.qty,
-        items: item.items
-      };
-      return;
-    }
-
-    if (!grouped[item.product]) {
-      grouped[item.product] = {
-        isCombo: false,
-        product: item.product,
-        image: item.image,
-        items: []
-      };
-    }
-
-    grouped[item.product].items.push(item);
-  });
-
-  return Object.values(grouped);
+/* ===== IMAGE FOR NORMAL PRODUCTS ===== */
+function getCartImage(item) {
+  const folder = item.product.toLowerCase().replaceAll(" ", "-");
+  const v = item.variant.toLowerCase().replace(" ", "");
+  const f = item.flavour ? "-" + item.flavour.toLowerCase() : "";
+  return `./images/${folder}/${v}${f}.jpg`;
 }
 
-/* ================= RENDER CART ================= */
 function renderCart() {
   const cartBox = document.getElementById("cart");
   const totalEl = document.getElementById("total");
@@ -224,8 +217,7 @@ function renderCart() {
     cartBox.innerHTML = `
       <div class="empty-cart">
         🛒 <br><br>
-        <strong>Your cart is empty.</strong><br>
-        Add products to continue.
+        <strong>Your cart is empty.</strong>
       </div>
     `;
     totalEl.innerText = "Total: ₹0";
@@ -234,76 +226,72 @@ function renderCart() {
   }
 
   orderBtn.disabled = false;
-
-  let groups = groupCart();
   let grandTotal = 0;
 
-  groups.forEach(group => {
+  /* ===== COMBOS ===== */
+  cart.filter(i => i.type === "combo").forEach(combo => {
+    const subtotal = combo.qty * combo.price;
+    grandTotal += subtotal;
 
-    /* ===== COMBO RENDER (ALIGNED WITH OTHERS) ===== */
-    if (group.isCombo) {
-      const subtotal = group.price * group.qty;
-      grandTotal += subtotal;
-
-      cartBox.innerHTML += `
-        <div class="cart-item">
-          <img src="${group.image}">
-          <div class="cart-details">
-            <h4>${group.name}</h4>
-
-            <div class="variant-row">
-              <div>
-                <ul style="margin:8px 0 0; padding-left:18px;">
-                  ${group.items.map(i => `<li>${i}</li>`).join("")}
-                </ul>
-              </div>
-
-              <div class="qty-box">
-                <button onclick="updateComboQty('${group.id}', -1)">−</button>
-                <span>${group.qty}</span>
-                <button onclick="updateComboQty('${group.id}', 1)">+</button>
-              </div>
-
-              <div class="variant-price">₹${subtotal}</div>
-            </div>
-
+    cartBox.innerHTML += `
+      <div class="cart-group">
+        <div class="cart-row">
+          <img src="${combo.image}">
+          <div>
+            <strong>${combo.name}</strong>
+            <ul style="margin:8px 0 0; padding-left:18px;">
+              ${combo.items.map(i => `<li>${i}</li>`).join("")}
+            </ul>
           </div>
-        </div>
-      `;
-      return;
-    }
 
-    /* ===== NORMAL PRODUCTS (UNCHANGED) ===== */
+          <div class="qty-box">
+            <button onclick="updateComboQty('${combo.id}', -1)">−</button>
+            <span>${combo.qty}</span>
+            <button onclick="updateComboQty('${combo.id}', 1)">+</button>
+          </div>
+
+          <div class="price">₹${subtotal}</div>
+        </div>
+      </div>
+    `;
+  });
+
+  /* ===== NORMAL PRODUCTS ===== */
+  const grouped = {};
+  cart.filter(i => !i.type).forEach(item => {
+    if (!grouped[item.product]) grouped[item.product] = [];
+    grouped[item.product].push(item);
+  });
+
+  Object.keys(grouped).forEach(product => {
     let productTotal = 0;
 
-    const rows = group.items.map((item, i) => {
-      const subtotal = item.qty * item.price;
-      productTotal += subtotal;
-      grandTotal += subtotal;
+    const rows = grouped[product].map((item, i) => {
+      const sub = item.qty * item.price;
+      productTotal += sub;
+      grandTotal += sub;
 
       return `
-        <div class="variant-row">
+        <div class="cart-row">
+          <img src="${getCartImage(item)}">
           <div>${item.variant}${item.flavour ? ` (${item.flavour})` : ""}</div>
 
           <div class="qty-box">
-            <button onclick="updateQty('${group.product}', ${i}, -1)">−</button>
+            <button onclick="updateQty('${product}', ${i}, -1)">−</button>
             <span>${item.qty}</span>
-            <button onclick="updateQty('${group.product}', ${i}, 1)">+</button>
+            <button onclick="updateQty('${product}', ${i}, 1)">+</button>
           </div>
 
-          <div class="variant-price">₹${subtotal}</div>
+          <div class="price">₹${sub}</div>
         </div>
       `;
     }).join("");
 
     cartBox.innerHTML += `
-      <div class="cart-item">
-        <img src="${group.image}">
-        <div class="cart-details">
-          <h4>${group.product}</h4>
-          ${rows}
-          <div class="cart-subtotal">Subtotal: ₹${productTotal}</div>
-        </div>
+      <div class="cart-group">
+        <h3>${product}</h3>
+        ${rows}
+        <div class="group-subtotal">Subtotal: ₹${productTotal}</div>
       </div>
     `;
   });
@@ -311,13 +299,10 @@ function renderCart() {
   totalEl.innerText = "Total: ₹" + grandTotal;
 }
 
-/* ================= NORMAL QTY ================= */
+/* ===== UPDATE NORMAL ===== */
 function updateQty(product, index, change) {
-  const groups = groupCart();
-  const group = groups.find(g => g.product === product);
-  if (!group) return;
-
-  const item = group.items[index];
+  const items = cart.filter(i => i.product === product);
+  const item = items[index];
   if (!item) return;
 
   item.qty += change;
@@ -327,7 +312,7 @@ function updateQty(product, index, change) {
   renderCart();
 }
 
-/* ================= COMBO QTY ================= */
+/* ===== UPDATE COMBO ===== */
 function updateComboQty(id, change) {
   cart = cart.map(i => {
     if (i.type === "combo" && i.id === id) {
@@ -340,21 +325,17 @@ function updateComboQty(id, change) {
   renderCart();
 }
 
-/* ================= ORDER ================= */
+/* ===== ORDER ===== */
 document.getElementById("orderBtn").onclick = () => {
   let msg = "Order Details\n\n";
 
-  groupCart().forEach(g => {
-    if (g.isCombo) {
-      msg += g.name + " (Combo)\n";
-      g.items.forEach(i => msg += `• ${i}\n`);
-      msg += `Qty: ${g.qty}\n\n`;
-    } else {
-      msg += g.product + "\n";
-      g.items.forEach(i => {
-        msg += `• ${i.variant}${i.flavour ? ` (${i.flavour})` : ""} × ${i.qty}\n`;
-      });
+  cart.forEach(i => {
+    if (i.type === "combo") {
+      msg += `${i.name} (Combo) × ${i.qty}\n`;
+      i.items.forEach(x => msg += `• ${x}\n`);
       msg += "\n";
+    } else {
+      msg += `${i.product} - ${i.variant}${i.flavour ? ` (${i.flavour})` : ""} × ${i.qty}\n`;
     }
   });
 
