@@ -13,15 +13,8 @@
 
 <body>
 
-<!-- =====================================================
-     HEADER CONTROLS (Back & Cart)
-     Uses shared styles from style.css
-===================================================== -->
-
 <div style="position:fixed; top:14px; left:14px; z-index:20;">
-  <button class="header-pill back-btn" onclick="history.back()">
-    ← Back
-  </button>
+  <button class="header-pill back-btn" onclick="history.back()">← Back</button>
 </div>
 
 <div style="position:fixed; top:14px; right:14px; z-index:20;">
@@ -30,37 +23,27 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MAIN PRODUCT CONTAINER
-===================================================== -->
-
 <div class="container">
 
-  <!-- ===== PRODUCT IMAGE + OPTIONS LAYOUT ===== -->
   <div class="product-layout">
 
-    <!-- LEFT: PRODUCT IMAGE -->
     <div class="product-left">
       <div id="image" class="main-image"></div>
     </div>
 
-    <!-- RIGHT: PRODUCT OPTIONS -->
     <div class="product-right">
       <h2 id="name"></h2>
-
       <div id="price">Select variant</div>
 
-      <!-- VARIANTS -->
       <h4>Select Variant</h4>
       <div id="variants" class="options"></div>
 
-      <!-- FLAVOURS -->
-      <div id="flavourSection">
+      <!-- FLAVOURS (HIDDEN INITIALLY) -->
+      <div id="flavourSection" style="display:none;">
         <h4>Select Flavour</h4>
         <div id="flavours" class="options"></div>
       </div>
 
-      <!-- QUANTITY -->
       <h4>Quantity</h4>
       <div class="qty-box">
         <button class="qty-btn" onclick="changeQty(-1)">−</button>
@@ -68,14 +51,12 @@
         <button class="qty-btn" onclick="changeQty(1)">+</button>
       </div>
 
-      <!-- ADD TO CART -->
       <button id="addBtn" class="add-btn">
         Select Variant & Flavour
       </button>
     </div>
   </div>
 
-  <!-- ===== DESCRIPTION & USAGE ===== -->
   <div class="info-section">
     <h3>Description</h3>
     <p id="description"></p>
@@ -86,15 +67,9 @@
 
 </div>
 
-<!-- =====================================================
-     DATA & LOGIC
-===================================================== -->
-
 <script src="data.js"></script>
 
 <script>
-/* ---------------- CART HELPERS ---------------- */
-
 function getCart(){
   return JSON.parse(localStorage.getItem("cart")) || [];
 }
@@ -106,8 +81,6 @@ function updateCart(){
   document.getElementById("cartBox").innerText = "🛒 Cart (" + count + ")";
 }
 
-/* ---------------- PRODUCT LOAD ---------------- */
-
 const id = new URLSearchParams(location.search).get("id");
 const product = PRODUCTS[id];
 
@@ -118,53 +91,85 @@ document.getElementById("image").style.backgroundImage =
 document.getElementById("description").innerText = product.description;
 document.getElementById("howToUse").innerText = product.howToUse;
 
-/* ---------------- STATE ---------------- */
-
 let variant = null;
 let flavour = "";
 let qty = 1;
 
 const priceDiv = document.getElementById("price");
 const addBtn = document.getElementById("addBtn");
+const flavourSection = document.getElementById("flavourSection");
 
-/* ---------------- VARIANTS ---------------- */
+/* 🔹 IMAGE SWITCHING */
+function updateImage() {
+  let img = "cover.jpg";
+
+  if (variant) {
+    const v = variant.toLowerCase().replace(" ", "");
+    img = v + ".jpg";
+  }
+
+  if (variant && flavour) {
+    const v = variant.toLowerCase().replace(" ", "");
+    const f = flavour.toLowerCase();
+    img = `${v}-${f}.jpg`;
+  }
+
+  document.getElementById("image").style.backgroundImage =
+    `url('./images/${product.imageFolder}/${img}')`;
+}
+
+/* ================= VARIANTS ================= */
 
 Object.keys(product.variants).forEach(v => {
   const o = document.createElement("div");
   o.className = "option";
   o.innerText = v;
+
   o.onclick = () => {
     document.querySelectorAll("#variants .option")
       .forEach(x => x.classList.remove("active"));
     o.classList.add("active");
+
     variant = v;
+    flavour = "";
+
+    flavourSection.style.display = "block";
+    document.querySelectorAll("#flavours .option")
+      .forEach(x => x.classList.remove("active"));
+
+    updateImage();
     updatePrice();
     checkReady();
   };
+
   variants.appendChild(o);
 });
 
-/* ---------------- FLAVOURS ---------------- */
+/* ================= FLAVOURS ================= */
 
 if(product.flavours.length === 0){
-  document.getElementById("flavourSection").style.display = "none";
+  flavourSection.style.display = "none";
 }
 
 product.flavours.forEach(f => {
   const o = document.createElement("div");
   o.className = "option";
   o.innerText = f;
+
   o.onclick = () => {
     document.querySelectorAll("#flavours .option")
       .forEach(x => x.classList.remove("active"));
     o.classList.add("active");
+
     flavour = f;
+    updateImage();
     checkReady();
   };
+
   flavours.appendChild(o);
 });
 
-/* ---------------- PRICE & QTY ---------------- */
+/* ================= PRICE & QTY ================= */
 
 function updatePrice(){
   const p = product.variants[variant];
@@ -179,12 +184,32 @@ function changeQty(v){
   if(variant) updatePrice();
 }
 
-/* ---------------- ADD TO CART ---------------- */
+/* ================= ADD TO CART ================= */
+
+function resetSelections(){
+  variant = null;
+  flavour = "";
+  qty = 1;
+
+  document.getElementById("qty").innerText = "1";
+  priceDiv.innerText = "Select variant";
+  flavourSection.style.display = "none";
+
+  document.querySelectorAll(".option")
+    .forEach(x => x.classList.remove("active"));
+
+  document.getElementById("image").style.backgroundImage =
+    `url('./images/${product.imageFolder}/cover.jpg')`;
+
+  addBtn.classList.remove("active");
+  addBtn.innerText = "Select Variant & Flavour";
+}
 
 function checkReady(){
   if(variant && (product.flavours.length === 0 || flavour)){
     addBtn.classList.add("active");
     addBtn.innerText = "ADD TO CART";
+
     addBtn.onclick = () => {
       const cart = getCart();
       const existing = cart.find(i =>
@@ -204,8 +229,25 @@ function checkReady(){
       });
 
       localStorage.setItem("cart", JSON.stringify(cart));
-      updateCart();
-      alert("Added to cart");
+updateCart();
+
+/* ===== BUTTON FEEDBACK (SAME AS OFFERS) ===== */
+const originalText = addBtn.innerText;
+
+addBtn.innerText = "✓ Added";
+addBtn.style.background = "#16a34a";
+addBtn.style.transform = "scale(1.05)";
+addBtn.style.transition = "transform 0.15s ease, background 0.15s ease";
+
+setTimeout(() => {
+  addBtn.style.transform = "scale(1)";
+}, 150);
+
+setTimeout(() => {
+  addBtn.innerText = originalText;
+  addBtn.style.background = "";
+  resetSelections();
+}, 900);
     };
   }
 }
