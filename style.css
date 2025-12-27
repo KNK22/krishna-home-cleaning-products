@@ -21,7 +21,7 @@ body {
 
 /* Pill-style header buttons (Back & Cart) */
 .header-pill {
-  height: 44px;                /* SAME HEIGHT for all pills */
+  height: 44px;
   padding: 0 18px;
   border-radius: 999px;
   font-size: 14px;
@@ -55,7 +55,6 @@ body {
 
 /* =========================================================
    HOME PAGE HEADER
-   Title, trust text, cart row
 ========================================================= */
 
 .header {
@@ -64,15 +63,28 @@ body {
   background: #fff;
 }
 
+/* 🔴 AUTO-SHRINK TITLE (PHONE SAFE) */
 .header-title {
-  font-size: 30px;
+  font-size: clamp(20px, 6vw, 23px);
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
+/* 🔴 AUTO-SHRINK TRUST TEXT */
 .trust-strip {
   margin-top: 8px;
-  font-size: 16px;
+  font-size: clamp(10px, 3.2vw, 16px); /* 🔴 tighter scaling */
   color: #2e7d32;
+  white-space: nowrap;
+  overflow: hidden;        /* 🔴 IMPORTANT */
+  text-align: center;
+}
+
+
+/* hide scrollbar on mobile */
+.trust-strip::-webkit-scrollbar {
+  display: none;
 }
 
 .header-divider {
@@ -91,7 +103,6 @@ body {
 
 /* =========================================================
    PRODUCTS GRID (HOMEPAGE)
-   Product cards layout
 ========================================================= */
 
 .grid {
@@ -138,7 +149,6 @@ body {
 
 /* =========================================================
    PRODUCT PAGE LAYOUT
-   Image left, options right
 ========================================================= */
 
 .container {
@@ -147,7 +157,6 @@ body {
   padding: 0 16px;
 }
 
-/* Main product layout */
 .product-layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -160,7 +169,6 @@ body {
     align-items: start;
   }
 
-  /* Right side sticks on desktop */
   .product-right {
     position: sticky;
     top: 80px;
@@ -175,7 +183,6 @@ body {
   max-width: 420px;
 }
 
-/* Main product image */
 .main-image {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -200,7 +207,6 @@ body {
   margin-right: 6px;
 }
 
-/* Variant & flavour buttons */
 .options {
   display: flex;
   gap: 10px;
@@ -258,7 +264,7 @@ body {
 }
 
 /* =========================================================
-   PRODUCT DESCRIPTION & HOW TO USE
+   PRODUCT DESCRIPTION
 ========================================================= */
 
 .info-section {
@@ -273,7 +279,6 @@ body {
 
 /* =========================================================
    CART PAGE (SAFE ZONE)
-   Does NOT affect product/home UI
 ========================================================= */
 
 .cart-item {
@@ -283,4 +288,14 @@ body {
   align-items: center;
   padding: 12px 0;
   border-bottom: 1px solid #eee;
+}
+
+/* =========================================================
+   FOOTER — FORCE OVERRIDE INLINE STYLES
+========================================================= */
+
+footer {
+  font-size: clamp(14px, 4vw, 25px) !important;
+  white-space: nowrap;
+  overflow: hidden;
 }
