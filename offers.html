@@ -133,6 +133,57 @@
         grid-template-columns: 1fr;
       }
     }
+    <style>
+  /* existing styles */
+  .offer-card {
+    display: flex;
+    gap: 26px;
+    padding: 28px;
+    border: 2px dashed #22c55e;
+    border-radius: 28px;
+    background: #fff;
+  }
+
+  /* existing media queries, if any */
+
+
+  /* 🔴 PASTE THIS AT THE END */
+  @media (max-width: 768px) {
+
+    .offer-card {
+      padding: 18px;
+      gap: 16px;
+    }
+
+    .offer-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 16px;
+    }
+
+    .offer-details h2 {
+      font-size: 20px;
+    }
+
+    .offer-details ul {
+      margin: 8px 0;
+    }
+
+    .offer-details li {
+      font-size: 14px;
+    }
+
+    .offer-price {
+      font-size: 20px;
+    }
+
+    .offer-btn {
+      padding: 10px 22px;
+      font-size: 14px;
+    }
+  }
+</style>
+
   </style>
 </head>
 
