@@ -21,6 +21,7 @@ header {
   align-items: center;
   gap: 4px;
   padding: 14px 16px;
+  padding-top: 24px;          /* 🔴 ADDED: pushes text below back button */
   border-bottom: 1px solid #eee;
   position: relative;
 }
@@ -167,6 +168,187 @@ header h2 {
   background: #bdbdbd;
   cursor: not-allowed;
 }
+/* 🔴 COMBO CART – MAKE IT LOOK LIKE NORMAL PRODUCTS */
+
+.cart-group .cart-row {
+  align-items: center;
+}
+
+.cart-group ul {
+  margin: 6px 0 0;
+  padding-left: 14px;
+  font-size: 14px;        /* 🔴 smaller text */
+  color: #555;
+}
+
+.cart-group ul li {
+  margin-bottom: 4px;
+}
+
+/* 🔴 Reduce combo title size */
+.cart-group strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* 🔴 Keep qty box aligned like other products */
+.cart-group .qty-box {
+  align-self: center;
+}
+
+/* 🔴 Prevent combo rows from becoming tall */
+.cart-group .cart-row {
+  min-height: auto;
+}
+
+/* 🔴 Mobile tightening */
+@media (max-width: 768px) {
+  .cart-group ul {
+    font-size: 13px;
+  }
+
+  .cart-group strong {
+    font-size: 15px;
+  }
+}
+
+/* 🔴 FINAL FIX: Combo cart alignment */
+
+/* Override grid ONLY for combo rows */
+.cart-group .cart-row {
+  grid-template-columns: 90px 1fr auto; /* image | text+qty | price */
+  align-items: start;
+}
+
+/* Text + qty column */
+.cart-group .cart-row > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Combo title — force ONE LINE */
+.cart-group strong {
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Combo items list */
+.cart-group ul {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #555;
+}
+
+/* Qty goes BELOW text, not at edge */
+.cart-group .qty-box {
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+/* Price stays clean on right */
+.cart-group .price {
+  text-align: right;
+  min-width: 70px;
+  font-weight: 600;
+}
+
+/* Mobile tightening */
+@media (max-width: 768px) {
+  .cart-group ul {
+    font-size: 13px;
+  }
+
+  .cart-group strong {
+    font-size: 15px;
+  }
+}
+/* 🔴 FINAL POLISH: Push qty controls DOWN inside combo card */
+
+.cart-group .cart-row > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 🔴 Force qty box to bottom of text block */
+.cart-group .qty-box {
+  margin-top: auto;     /* 🔥 THIS is the key line */
+  padding-top: 8px;
+}
+/* 🔴 FINAL LAYOUT: qty and price on same bottom row */
+
+/* Turn text column into grid */
+.cart-group .cart-row > div:nth-child(2) {
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* title | list | bottom-row */
+}
+
+/* Bottom row container effect */
+.cart-group .qty-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: start;
+}
+
+/* Move price next to qty */
+.cart-group .price {
+  align-self: end;
+  justify-self: end;
+  margin-top: 8px;
+}
+
+/* Force qty + price alignment */
+.cart-group .cart-row {
+  align-items: start;
+}
+
+/* Make qty & price visually aligned */
+.cart-group .qty-box,
+.cart-group .price {
+  margin-top: 6px;
+}
+/* 🔥 FINAL FINAL FIX — qty + price BELOW IMAGE */
+
+/* Make combo row a 2-row grid */
+.cart-group .cart-row {
+  grid-template-columns: 90px 1fr;          /* image | text */
+  grid-template-rows: auto auto;            /* content | bottom row */
+  align-items: start;
+}
+
+/* Image stays top-left */
+.cart-group .cart-row img {
+  grid-row: 1 / 2;
+}
+
+/* Text stays top-right */
+.cart-group .cart-row > div:nth-child(2) {
+  grid-row: 1 / 2;
+}
+
+/* Move qty BELOW image */
+.cart-group .qty-box {
+  grid-column: 1 / 2;                       /* under image */
+  grid-row: 2 / 3;
+  justify-self: start;
+  margin-top: 10px;
+}
+
+/* Move price BESIDE qty */
+.cart-group .price {
+  grid-column: 2 / 3;                       /* beside qty */
+  grid-row: 2 / 3;
+  align-self: center;
+  justify-self: start;
+  font-weight: 600;
+  margin-top: 19px;
+}
+
+
 </style>
 </head>
 
