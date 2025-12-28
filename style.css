@@ -329,3 +329,14 @@ footer {
   color: #020617;
   font-weight: 600;
 }
+/* =========================================================
+   HOME PAGE PROMO / FESTIVE BOX – DARK FIX
+========================================================= */
+
+.festive-home-box,
+.promo-box,
+.offer-banner {
+  background: #020617;
+  color: #e5e7eb;
+}
+
