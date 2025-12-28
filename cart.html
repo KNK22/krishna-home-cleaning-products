@@ -493,8 +493,8 @@ let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 /* ===== IMAGE FOR NORMAL PRODUCTS ===== */
 function getCartImage(item) {
-  const folder = item.product.toLowerCase().replaceAll(" ", "-");
-  const v = item.variant.toLowerCase().replace(" ", "");
+  const folder = item.imageFolder; // ✅ USE REAL FOLDER
+  const v = item.variant.toLowerCase().replace(/\s+/g, "");
   const f = item.flavour ? "-" + item.flavour.toLowerCase() : "";
   return `./images/${folder}/${v}${f}.jpg`;
 }
