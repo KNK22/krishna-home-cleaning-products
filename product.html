@@ -46,10 +46,11 @@
 
       <h4>Quantity</h4>
       <div class="qty-box">
-        <button class="qty-btn" onclick="changeQty(-1)">−</button>
-        <span id="qty">1</span>
-        <button class="qty-btn" onclick="changeQty(1)">+</button>
-      </div>
+  <button id="qtyMinus" class="qty-btn" onclick="changeQty(-1)">−</button>
+  <span id="qty">1</span>
+  <button id="qtyPlus" class="qty-btn" onclick="changeQty(1)">+</button>
+</div>
+
 
       <button id="addBtn" class="add-btn">
         Select Variant & Flavour
@@ -209,6 +210,7 @@ function resetSelections(){
   variant = null;
   flavour = "";
   qty = 1;
+  disableQty(); // ✅ DISABLE AGAIN
 
   document.getElementById("qty").innerText = "1";
   priceDiv.innerText = "Select variant";
@@ -226,6 +228,7 @@ function resetSelections(){
 
 function checkReady(){
   if(variant && (product.flavours.length === 0 || flavour)){
+        enableQty(); // ✅ ENABLE QUANTITY HERE
     addBtn.classList.add("active");
     addBtn.innerText = "ADD TO CART";
 
@@ -275,7 +278,26 @@ setTimeout(() => {
   }
 }
 
+const qtyMinus = document.getElementById("qtyMinus");
+const qtyPlus = document.getElementById("qtyPlus");
+
+function disableQty() {
+  qtyMinus.disabled = true;
+  qtyPlus.disabled = true;
+  qtyMinus.style.opacity = "0.4";
+  qtyPlus.style.opacity = "0.4";
+}
+
+function enableQty() {
+  qtyMinus.disabled = false;
+  qtyPlus.disabled = false;
+  qtyMinus.style.opacity = "1";
+  qtyPlus.style.opacity = "1";
+}
+
+
 updateCart();
+disableQty();
 </script>
 
 </body>
