@@ -243,6 +243,7 @@ function checkReady(){
       if(existing) existing.qty += qty;
       else cart.push({
         product: product.name,
+          imageFolder: product.imageFolder, // 🔥 ADD THIS
         variant,
         flavour,
         price:
