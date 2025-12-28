@@ -1,304 +1,142 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Product</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#2e7d32">
-
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-<div style="position:fixed; top:14px; left:14px; z-index:20;">
-  <button class="header-pill back-btn" onclick="history.back()">← Back</button>
-</div>
-
-<div style="position:fixed; top:14px; right:14px; z-index:20;">
-  <div id="cartBox" class="header-pill cart-btn" onclick="location.href='cart.html'">
-    🛒 Cart (0)
-  </div>
-</div>
-
-<div class="container">
-
-  <div class="product-layout">
-
-    <div class="product-left">
-      <div id="image" class="main-image"></div>
-    </div>
-
-    <div class="product-right">
-      <h2 id="name"></h2>
-      <div id="price">Select variant</div>
-
-      <h4>Select Variant</h4>
-      <div id="variants" class="options"></div>
-
-      <!-- FLAVOURS (HIDDEN INITIALLY) -->
-      <div id="flavourSection" style="display:none;">
-        <h4>Select Flavour</h4>
-        <div id="flavours" class="options"></div>
-      </div>
-
-      <h4>Quantity</h4>
-      <div class="qty-box">
-  <button id="qtyMinus" class="qty-btn" onclick="changeQty(-1)">−</button>
-  <span id="qty">1</span>
-  <button id="qtyPlus" class="qty-btn" onclick="changeQty(1)">+</button>
-</div>
+/* =========================================
+   SINGLE SOURCE OF TRUTH – DATA.JS
+   Products + Combo Offers
+   ========================================= */
 
 
-      <button id="addBtn" class="add-btn">
-        Select Variant & Flavour
-      </button>
-    </div>
-  </div>
+/* =====================
+   NORMAL PRODUCTS
+   ===================== */
 
-  <div class="info-section">
-    <h3>Description</h3>
-    <p id="description"></p>
+const PRODUCTS = {
+  phenyl: {
+    id: "phenyl",
+    name: "Phenyl",
+    imageFolder: "phenyl",
+    variants: {
+      "1 L": { price: 100, mrp: 130 },
+      "5 L": { price: 400, mrp: 500 }
+    },
+    flavours: ["Rose", "Lemon", "Plain"],
+    description:
+      "Krishna Phenyl is a powerful disinfectant floor cleaner suitable for daily use.",
+    howToUse:
+      "Add 1–2 caps in a bucket of water and mop the floor."
+  },
 
-    <h3>How to Use</h3>
-    <p id="howToUse"></p>
-  </div>
+  "floor-cleaner": {
+    id: "floor-cleaner",
+    name: "Floor Cleaner",
+    imageFolder: "floor-cleaner",
+    variants: {
+      "1 L": { price: 130, mrp: 200 },
+      "5 L": { price: 500, mrp: 600 }
+    },
+    flavours: ["Lavender", "Sandalwood"],
+    description:
+      "Removes tough stains and leaves a long-lasting fragrance.",
+    howToUse:
+      "Mix 1–2 caps in water and mop evenly."
+  },
 
-</div>
+  dishwash: {
+    id: "dishwash",
+    name: "Dishwash Liquid",
+    imageFolder: "dishwash",
+    variants: {
+      "1 L": { price: 150, mrp: 200 },
+      "250 ml": { price: 40, mrp: 50 }
+    },
+    flavours: [],
+    description:
+      "Cuts grease effectively and is gentle on hands.",
+    howToUse:
+      "Apply a few drops on sponge and clean utensils."
+  },
 
-<script src="data.js"></script>
+  handwash: {
+    id: "handwash",
+    name: "Handwash",
+    imageFolder: "handwash",
+    variants: {
+      "1 L": { price: 100, mrp: 130 },
+      "250 ml": { price: 50, mrp: 60 }
+    },
+    flavours: [],
+    description:
+      "Kills germs while keeping hands soft.",
+    howToUse:
+      "Apply on wet hands, lather for 20 seconds and rinse."
+  },
 
-<script>
-function getCart(){
-  return JSON.parse(localStorage.getItem("cart")) || [];
-}
-
-function updateCart(){
-  const cart = getCart();
-  let count = 0;
-  cart.forEach(i => count += Number(i.qty) || 0);
-  document.getElementById("cartBox").innerText = "🛒 Cart (" + count + ")";
-}
-
-const id = new URLSearchParams(location.search).get("id");
-const product = PRODUCTS[id];
-
-document.getElementById("name").innerText = product.name;
-document.getElementById("image").style.backgroundImage =
-  `url('./images/${product.imageFolder}/cover.jpg')`;
-
-document.getElementById("description").innerText = product.description;
-document.getElementById("howToUse").innerText = product.howToUse;
-
-let variant = null;
-let flavour = "";
-let qty = 1;
-
-const priceDiv = document.getElementById("price");
-const addBtn = document.getElementById("addBtn");
-const flavourSection = document.getElementById("flavourSection");
-
-/* 🔹 IMAGE SWITCHING */
-function updateImage() {
-  let img = "cover.jpg";
-
-  if (variant) {
-    const v = variant.toLowerCase().replace(/\s+/g, "");
-    img = v + ".jpg";
+  "toilet-cleaner": {
+    id: "toilet-cleaner",
+    name: "Toilet Cleaner",
+    imageFolder: "toilet-cleaner",
+    variants: {
+      "1 L": { price: 130, mrp: 200 },
+      "5 L": { price: 500, mrp: 600 }
+    },
+    flavours: [],
+    description:
+      "Removes stains and kills 99.9% germs.",
+    howToUse:
+      "Pour under rim, wait 10 minutes, scrub and flush."
   }
+};
 
-  if (variant && flavour) {
-    const v = variant.toLowerCase().replace(/\s+/g, "");
-    const f = flavour.toLowerCase();
 
-    // 🔥 SPECIAL FIX: phenyl 1L lemon
-    if (product.id === "phenyl" && v === "1l" && f === "lemon") {
-      img = "nl-lemon.jpg";
-    } else {
-      img = `${v}-${f}.jpg`;
-    }
+/* =====================
+   COMBO / OFFER PRODUCTS
+   ===================== */
+
+const COMBO_OFFERS = [
+  {
+    id: "home-hygiene-combo",
+
+    /* 🔹 CHANGE THIS TO:
+       "Festive Offers"
+       "Today’s Deals"
+       "Special Combo"
+    */
+    sectionTitle: "Combo Offers",
+
+    title: "Home Hygiene Combo",
+    badge: "FREE Dishwash & Handwash",
+
+    /* 🔹 IMAGES (ONLY CHANGE FILES, NOT CODE) */
+    images: {
+      homepage: "images/offers/offer-homepage.jpg",
+      detail: "images/offers/offer-pic.jpg"
+    },
+
+    /* 🔹 PRICE CONTROL */
+    price: 199,
+    mrp: 260,
+
+    /* 🔹 WHAT CUSTOMER GETS */
+    items: [
+      { name: "Phenyl", qty: "1 L" },
+      { name: "Floor Cleaner", qty: "1 L" }
+    ],
+
+    freeItems: [
+      { name: "Dishwash", qty: "250 ml" },
+      { name: "Handwash", qty: "250 ml" }
+    ],
+
+    description:
+      "Best value combo for complete home hygiene. Ideal for daily cleaning needs.",
+
+    howToUse:
+      "Use phenyl and floor cleaner as directed. Free products included with every combo."
   }
-
-  document.getElementById("image").style.backgroundImage =
-    `url('./images/${product.imageFolder}/${img}')`;
-}
-
-/* ================= VARIANTS ================= */
-
-Object.keys(product.variants).forEach(v => {
-  const o = document.createElement("div");
-  o.className = "option";
-  o.innerText = v;
-
-  o.onclick = () => {
-    document.querySelectorAll("#variants .option")
-      .forEach(x => x.classList.remove("active"));
-    o.classList.add("active");
-
-    variant = v;
-    flavour = "";
-
-    flavourSection.style.display = "block";
-    document.querySelectorAll("#flavours .option")
-      .forEach(x => x.classList.remove("active"));
-
-    updateImage();
-    updatePrice();
-    checkReady();
-  };
-
-  variants.appendChild(o);
-});
-
-/* ================= FLAVOURS ================= */
-
-if(product.flavours.length === 0){
-  flavourSection.style.display = "none";
-}
-
-product.flavours.forEach(f => {
-  const o = document.createElement("div");
-  o.className = "option";
-  o.innerText = f;
-
-  o.onclick = () => {
-    document.querySelectorAll("#flavours .option")
-      .forEach(x => x.classList.remove("active"));
-    o.classList.add("active");
-
-    flavour = f;
-    updateImage();
-    updatePrice();   // 🔥 THIS IS THE FIX
-    checkReady();
-  };
-
-  flavours.appendChild(o);
-});
-
-/* ================= PRICE & QTY ================= */
-
-function updatePrice(){
-  let p = product.variants[variant];
-
-  // 🔥 SPECIAL PRICE ONLY FOR PHENYL PLAIN
-  if (product.id === "phenyl" && flavour === "Plain") {
-    if (variant === "1 L") {
-      p = { price: 80, mrp: 100 };
-    }
-    if (variant === "5 L") {
-      p = { price: 300, mrp: 350 };
-    }
-  }
-
-  priceDiv.innerHTML =
-    `<span class="mrp">₹${p.mrp}</span>
-     ₹${p.price} × ${qty} = <b>₹${p.price * qty}</b>`;
-}
+];
 
 
-function changeQty(v){
-  qty = Math.max(1, qty + v);
-  document.getElementById("qty").innerText = qty;
-  if(variant) updatePrice();
-}
+/* =====================
+   EXPORT (GLOBAL)
+   ===================== */
 
-/* ================= ADD TO CART ================= */
-
-function resetSelections(){
-  variant = null;
-  flavour = "";
-  qty = 1;
-  disableQty(); // ✅ DISABLE AGAIN
-
-  document.getElementById("qty").innerText = "1";
-  priceDiv.innerText = "Select variant";
-  flavourSection.style.display = "none";
-
-  document.querySelectorAll(".option")
-    .forEach(x => x.classList.remove("active"));
-
-  document.getElementById("image").style.backgroundImage =
-    `url('./images/${product.imageFolder}/cover.jpg')`;
-
-  addBtn.classList.remove("active");
-  addBtn.innerText = "Select Variant & Flavour";
-}
-
-function checkReady(){
-  if(variant && (product.flavours.length === 0 || flavour)){
-        enableQty(); // ✅ ENABLE QUANTITY HERE
-    addBtn.classList.add("active");
-    addBtn.innerText = "ADD TO CART";
-
-    addBtn.onclick = () => {
-      const cart = getCart();
-      const existing = cart.find(i =>
-        i.product === product.name &&
-        i.variant === variant &&
-        i.flavour === flavour
-      );
-
-      if(existing) existing.qty += qty;
-      else cart.push({
-        product: product.name,
-        variant,
-        flavour,
-        price:
-  (product.id === "phenyl" && flavour === "Plain")
-    ? (variant === "1 L" ? 80 : 300)
-    : product.variants[variant].price,
-
-        qty,
-        image: `./images/${product.imageFolder}/cover.jpg`
-      });
-
-      localStorage.setItem("cart", JSON.stringify(cart));
-updateCart();
-
-/* ===== BUTTON FEEDBACK (SAME AS OFFERS) ===== */
-const originalText = addBtn.innerText;
-
-addBtn.innerText = "✓ Added";
-addBtn.style.background = "#16a34a";
-addBtn.style.transform = "scale(1.05)";
-addBtn.style.transition = "transform 0.15s ease, background 0.15s ease";
-
-setTimeout(() => {
-  addBtn.style.transform = "scale(1)";
-}, 150);
-
-setTimeout(() => {
-  addBtn.innerText = originalText;
-  addBtn.style.background = "";
-  resetSelections();
-}, 900);
-    };
-  }
-}
-
-const qtyMinus = document.getElementById("qtyMinus");
-const qtyPlus = document.getElementById("qtyPlus");
-
-function disableQty() {
-  qtyMinus.disabled = true;
-  qtyPlus.disabled = true;
-  qtyMinus.style.opacity = "0.4";
-  qtyPlus.style.opacity = "0.4";
-}
-
-function enableQty() {
-  qtyMinus.disabled = false;
-  qtyPlus.disabled = false;
-  qtyMinus.style.opacity = "1";
-  qtyPlus.style.opacity = "1";
-}
-
-
-updateCart();
-disableQty();
-</script>
-
-</body>
-</html>
+window.PRODUCTS = PRODUCTS;
+window.COMBO_OFFERS = COMBO_OFFERS;
