@@ -15,7 +15,7 @@ const PRODUCTS = {
     imageFolder: "phenyl",
     variants: {
       "1 L": { price: 100, mrp: 130 },
-      "5 L": { price: 350, mrp: 500 }
+      "5 L": { price: 400, mrp: 500 }
     },
     flavours: ["Rose", "Lemon", "Plain"],
     description:
@@ -45,7 +45,7 @@ const PRODUCTS = {
     imageFolder: "dishwash",
     variants: {
       "1 L": { price: 150, mrp: 200 },
-      "5 L": { price: 450, mrp: 600 }
+      "250 ml": { price: 40, mrp: 50 }
     },
     flavours: [],
     description:
@@ -60,7 +60,7 @@ const PRODUCTS = {
     imageFolder: "handwash",
     variants: {
       "1 L": { price: 100, mrp: 130 },
-      "5 L": { price: 400, mrp: 500 }
+      "250 ml": { price: 50, mrp: 60 }
     },
     flavours: [],
     description:
