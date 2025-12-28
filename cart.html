@@ -348,6 +348,113 @@ header h2 {
   margin-top: 19px;
 }
 
+/* 🔴 NORMAL PRODUCTS: qty + price beside image */
+
+/* Target ONLY normal product rows (inside product groups, not combos) */
+.cart-group:not(:has(strong)) .cart-row {
+  grid-template-columns: 100px auto auto; /* image | qty | price */
+  align-items: center;
+  column-gap: 16px;
+}
+
+/* Hide the variant text column spacing */
+.cart-group:not(:has(strong)) .cart-row > div:first-of-type {
+  white-space: nowrap;
+}
+
+/* Qty box beside image */
+.cart-group:not(:has(strong)) .qty-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Price beside qty */
+.cart-group:not(:has(strong)) .price {
+  font-weight: 600;
+  min-width: auto;
+  text-align: left;
+}
+/* 🔴 NORMAL PRODUCTS ONLY: force qty + price beside image */
+
+/* Target normal product rows (they are inside cart-group WITH h3) */
+.cart-group h3 + .cart-row {
+  grid-template-columns: 100px auto auto;
+  align-items: center;
+  column-gap: 16px;
+}
+
+/* Place qty beside image */
+.cart-group h3 + .cart-row .qty-box {
+  grid-column: 2 / 3;
+  grid-row: 1;
+  align-self: center;
+}
+
+/* Place price beside qty */
+.cart-group h3 + .cart-row .price {
+  grid-column: 3 / 4;
+  grid-row: 1;
+  align-self: center;
+  text-align: left;
+}
+
+/* ✅ FIX NORMAL PRODUCT ROW LAYOUT (FINAL) */
+.cart-group h3 ~ .cart-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Variant text always next to image */
+.cart-group h3 ~ .cart-row > div:first-of-type {
+  display: block;
+  white-space: nowrap;
+}
+
+/* Qty box position */
+.cart-group h3 ~ .cart-row .qty-box {
+  grid-column: auto;
+}
+
+/* Price stays right */
+.cart-group h3 ~ .cart-row .price {
+  text-align: right;
+}
+
+/* ===============================
+   NORMAL PRODUCTS → CONTROLS BELOW (LIKE COMBO)
+   =============================== */
+
+/* Normal product rows only (inside product groups with h3) */
+.cart-group h3 ~ .cart-row {
+  grid-template-columns: 100px 1fr;
+  grid-template-rows: auto auto;
+  align-items: start;
+}
+
+/* Variant text stays on top */
+.cart-group h3 ~ .cart-row > div:first-of-type {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+/* Move qty BELOW image */
+.cart-group h3 ~ .cart-row .qty-box {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  margin-top: 8px;
+}
+
+/* Move price BESIDE qty (same row) */
+.cart-group h3 ~ .cart-row .price {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  align-self: center;
+  margin-top: 8px;
+}
+
 
 </style>
 </head>
@@ -449,7 +556,16 @@ function renderCart() {
     let productTotal = 0;
 
     const rows = grouped[product].map((item, i) => {
-      const sub = item.qty * item.price;
+      let price = item.price;
+
+// 🔥 FORCE CORRECT PRICE FOR PHENYL → PLAIN
+if (item.product === "Phenyl" && item.flavour === "Plain") {
+  if (item.variant === "1 L") price = 80;
+  if (item.variant === "5 L") price = 300;
+}
+
+const sub = item.qty * price;
+
       productTotal += sub;
       grandTotal += sub;
 
