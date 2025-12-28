@@ -169,6 +169,7 @@ product.flavours.forEach(f => {
 
     flavour = f;
     updateImage();
+    updatePrice();   // 🔥 THIS IS THE FIX
     checkReady();
   };
 
@@ -178,11 +179,23 @@ product.flavours.forEach(f => {
 /* ================= PRICE & QTY ================= */
 
 function updatePrice(){
-  const p = product.variants[variant];
+  let p = product.variants[variant];
+
+  // 🔥 SPECIAL PRICE ONLY FOR PHENYL PLAIN
+  if (product.id === "phenyl" && flavour === "Plain") {
+    if (variant === "1 L") {
+      p = { price: 80, mrp: 100 };
+    }
+    if (variant === "5 L") {
+      p = { price: 300, mrp: 350 };
+    }
+  }
+
   priceDiv.innerHTML =
     `<span class="mrp">₹${p.mrp}</span>
      ₹${p.price} × ${qty} = <b>₹${p.price * qty}</b>`;
 }
+
 
 function changeQty(v){
   qty = Math.max(1, qty + v);
@@ -229,7 +242,11 @@ function checkReady(){
         product: product.name,
         variant,
         flavour,
-        price: product.variants[variant].price,
+        price:
+  (product.id === "phenyl" && flavour === "Plain")
+    ? (variant === "1 L" ? 80 : 300)
+    : product.variants[variant].price,
+
         qty,
         image: `./images/${product.imageFolder}/cover.jpg`
       });
