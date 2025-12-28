@@ -74,7 +74,7 @@ body {
 /* 🔴 AUTO-SHRINK TRUST TEXT */
 .trust-strip {
   margin-top: 8px;
-  font-size: clamp(10px, 3.2vw, 16px); /* 🔴 tighter scaling */
+  font-size: clamp(10px, 3.2vw, 12px); /* 🔴 tighter scaling */
   color: #2e7d32;
   white-space: nowrap;
   overflow: hidden;        /* 🔴 IMPORTANT */
