@@ -641,10 +641,16 @@ document.getElementById("orderBtn").onclick = () => {
     }
   });
 
+  // 1️⃣ Open WhatsApp
   window.open(
     "https://wa.me/917093187617?text=" + encodeURIComponent(msg),
     "_blank"
   );
+
+  // 2️⃣ CLEAR CART (🔥 THIS IS THE FIX)
+  localStorage.removeItem("cart");
+  cart = [];
+  renderCart();
 };
 
 renderCart();
