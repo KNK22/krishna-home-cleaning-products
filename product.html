@@ -87,7 +87,7 @@ const product = PRODUCTS[id];
 
 document.getElementById("name").innerText = product.name;
 document.getElementById("image").style.backgroundImage =
-  `url('./images/${product.imageFolder}/cover.jpg')`;
+  `url('/krishna-home-cleaning-products/images/${product.imageFolder}/cover.jpg')`;
 
 document.getElementById("description").innerText = product.description;
 document.getElementById("howToUse").innerText = product.howToUse;
@@ -122,7 +122,7 @@ function updateImage() {
   }
 
   document.getElementById("image").style.backgroundImage =
-    `url('./images/${product.imageFolder}/${img}')`;
+    `url('/krishna-home-cleaning-products/images/${product.imageFolder}/${img}')`;
 }
 
 /* ================= VARIANTS ================= */
@@ -220,7 +220,7 @@ function resetSelections(){
     .forEach(x => x.classList.remove("active"));
 
   document.getElementById("image").style.backgroundImage =
-    `url('./images/${product.imageFolder}/cover.jpg')`;
+    `url('/krishna-home-cleaning-products/images/${product.imageFolder}/cover.jpg')`;
 
   addBtn.classList.remove("active");
   addBtn.innerText = "Select Variant & Flavour";
@@ -321,6 +321,11 @@ function renderVariants() {
 
 
 updateCart();
+
+window.addEventListener("pageshow", () => {
+  updateCart();
+});
+
 disableQty();
 </script>
 
