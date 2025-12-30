@@ -22,7 +22,7 @@ body {
   padding: 0 18px;
   border-radius: 999px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -32,20 +32,16 @@ body {
 
 /* Back button */
 .back-btn {
-  background: #020617;
+  background: #2e7d32;
   border: 1px solid #334155;
-  color: #e5e7eb;
-}
-
-.back-btn:hover {
-  background: #020617;
+  color: #000000;
 }
 
 /* Cart button */
 .cart-btn,
 #cartBox {
   background: #2e7d32;
-  color: #ffffff;
+  color: #000000;
   border: none;
   text-decoration: none;
 }
@@ -223,7 +219,7 @@ body {
   background: #22c55e;
   color: #020617;
   border-color: #22c55e;
-  font-weight: 600;
+  font-weight: 900;
 }
 
 /* =========================================================
@@ -326,7 +322,8 @@ footer {
 }
 
 .offer-pill,
-.offer-badge {
+.offer-badge,
+.offer-details .offer-badge {
   background: #22c55e;
   color: #020617;
   font-weight: 600;
@@ -385,7 +382,7 @@ footer {
   font-size: 13px;
   font-weight: 700;
   background: #16a34a;
-  color: #ffffff;
+  color: #000000;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -405,4 +402,9 @@ footer {
   height: 50px;
   border-radius: 11px;
   object-fit: cover;
+}
+
+/* FORCE OFFER BUTTON TEXT WEIGHT */
+.offer-details .offer-btn {
+  font-weight: 700;
 }
