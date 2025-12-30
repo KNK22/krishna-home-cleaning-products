@@ -31,8 +31,9 @@
   border-radius: 999px;
   border: none;
   background: #2e7d32;   /* same green as Cart */
-  color: #ffffff;
+  color: #000000;
   font-size: 16px;
+    font-weight: 700;
   cursor: pointer;
 }
 
@@ -81,9 +82,10 @@
       margin: 10px 0;
       padding: 6px 14px;
       background: #22c55e;
-      color: #fff;
+      color: #020617;
       border-radius: 999px;
       font-size: 13px;
+      font-weight: 700;
       width: fit-content;
     }
 
@@ -117,7 +119,7 @@
       border-radius: 999px;
       border: none;
       background: #22c55e;
-      color: #fff;
+      color: #000000;
       font-size: 15px;
       cursor: pointer;
       align-self: flex-start;
@@ -234,7 +236,7 @@
 
     <!-- OFFER 3 -->
     <div class="offer-card" data-combo-id="combo-003">
-      <img src="images/offers/offer-pic-3.jpg" class="offer-img">
+      <img src="images/offers/offer-pic-2.jpg" class="offer-img">
       <div class="offer-details">
         <h2>Kitchen Combo</h2>
         <span class="offer-badge">Festival Special</span>
@@ -249,7 +251,7 @@
 
     <!-- OFFER 4 -->
     <div class="offer-card" data-combo-id="combo-004">
-      <img src="images/offers/offer-pic-4.jpg" class="offer-img">
+      <img src="images/offers/offer-pic-2.jpg" class="offer-img">
       <div class="offer-details">
         <h2>Toilet Combo</h2>
         <span class="offer-badge">Festival Special</span>
@@ -264,7 +266,7 @@
 
     <!-- OFFER 5 -->
     <div class="offer-card hidden-offer" data-combo-id="combo-005">
-      <img src="images/offers/offer-pic-5.jpg" class="offer-img">
+      <img src="images/offers/offer-pic-2.jpg" class="offer-img">
       <div class="offer-details">
         <h2>Toilet Combo</h2>
         <span class="offer-badge">Festival Special</span>
@@ -279,7 +281,7 @@
 
     <!-- OFFER 6 -->
     <div class="offer-card hidden-offer" data-combo-id="combo-006">
-      <img src="images/offers/offer-pic-6.jpg" class="offer-img">
+      <img src="images/offers/offer-pic-2.jpg" class="offer-img">
       <div class="offer-details">
         <h2>Toilet Combo</h2>
         <span class="offer-badge">Festival Special</span>
@@ -356,9 +358,11 @@ function updateCartCount() {
 }
 
 document.addEventListener("DOMContentLoaded", updateCartCount);
-window.addEventListener("focus", updateCartCount);
+window.addEventListener("pageshow", updateCartCount);
+
+
+
 </script>
 
 </body>
 </html>
-
