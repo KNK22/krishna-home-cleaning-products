@@ -182,10 +182,12 @@ body {
   width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 16px;
-  background-size: cover;
+  background-size: contain;   /* ← FIX */
   background-position: center;
+  background-repeat: no-repeat;
   background-color: #020617;
 }
+
 
 /* =========================================================
    PRICE & VARIANTS
@@ -340,3 +342,67 @@ footer {
   color: #e5e7eb;
 }
 
+/* ===============================
+   INSTALL APP STRIP (BELOW CART)
+   =============================== */
+
+.install-box {
+  margin: 12px 16px 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  background: #020617;
+  border: 1px dashed #22c55e;
+}
+
+.install-box .left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.install-box .text {
+  font-size: 17px;
+  line-height: 1.25;
+  color: #e5e7eb;
+    margin-left: 10px;
+}
+
+.install-box .text small {
+  display: block;
+  font-size: 16px;
+  color: #94a3b8;
+}
+
+.install-box .btn {
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  background: #16a34a;
+  color: #ffffff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* LOGO */
+
+.install-box .icon.logo {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.install-box .icon.logo img {
+  width: 50px;
+  height: 50px;
+  border-radius: 11px;
+  object-fit: cover;
+}
