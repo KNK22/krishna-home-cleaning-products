@@ -6,6 +6,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
+
+    /* ================================
+   SCREENSHOT ARROWS (BELOW LIST)
+================================= */
+.arrow-controls {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 12px;
+}
+
+.arrow-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(34,197,94,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.arrow-btn:hover {
+  background: rgba(34,197,94,0.15);
+}
+
+/* ================================
+   FULLSCREEN PREVIEW OVERLAY
+================================= */
+.preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.95);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.preview-overlay img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 14px;
+}
+
+/* ================================
+   FULLSCREEN ARROWS — FIXED STYLE
+================================= */
+.preview-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(2, 6, 23, 0.85); /* solid dark */
+  border: 1.5px solid rgba(34,197,94,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+}
+
+.preview-arrow.left {
+  left: 16px;
+}
+
+.preview-arrow.right {
+  right: 16px;
+}
+
+.preview-arrow:hover {
+  background: rgba(34,197,94,0.15);
+}
+
+/* CLOSE BUTTON */
+.preview-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+    /* ================================
+       GLOBAL / BODY
+    ================================= */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -17,90 +109,377 @@
       min-height: 100vh;
     }
 
-    .box {
+    /* ================================
+       MAIN CONTAINER
+    ================================= */
+    .container {
+      width: 100%;
       max-width: 420px;
-      padding: 24px;
-      border-radius: 16px;
+      padding: 20px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    /* ================================
+       BACK BUTTON
+    ================================= */
+    .back-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #2e7d32;
+      color: #000000;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 22px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    /* ================================
+       MAIN DOWNLOAD BOX
+    ================================= */
+    .box {
       background: #020617;
-      border: 1px solid #1e293b;
+      border-radius: 20px;
+      padding: 30px 20px;
       text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
+      margin-top: 24px;
     }
 
     h1 {
-      margin-top: 0;
-      font-size: 22px;
+      margin: 0 0 10px;
+      font-size: 26px;
+      font-weight: bold;
+      color: #ffffff;
     }
 
     p {
-      font-size: 15px;
+      margin: 0 0 20px;
+      font-size: 14px;
       color: #cbd5f5;
     }
 
-    .btn {
+    .download-btn {
       display: block;
-      margin-top: 20px;
-      padding: 16px;
-      background: #22c55e;
+      width: 100%;
+      background: #16a34a;
       color: #000000;
       text-decoration: none;
+      padding: 14px 0;
       border-radius: 12px;
-      font-weight: 700;
       font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
     }
 
     .note {
-      margin-top: 14px;
       font-size: 13px;
-      color: #94a3b8;
+      line-height: 1.6;
+      color: #cbd5f5;
     }
 
-    /* ===============================
-       BACK BUTTON (CONSISTENT STYLE)
-       =============================== */
+    /* ================================
+       SCREENSHOTS SECTION
+    ================================= */
+    .screenshots-section {
+      margin-top: 30px;
+      text-align: center;
+    }
 
-    .back-btn {
-      position: fixed;
-      top: 14px;
-      left: 14px;
-      z-index: 10;
+    .screenshots-container {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 10px;
+    }
 
-      padding: 10px 18px;
+    .screenshots-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screenshot {
+      height: 220px;
+      border-radius: 12px;
+      cursor: pointer;
+      scroll-snap-align: center;
+      flex-shrink: 0;
+    }
+
+    .arrow-controls {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 10px;
+      font-size: 22px;
+    }
+
+    .arrow-btn {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .arrow-btn.disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* ================================
+       HELP SECTION – CANONICAL VERSION
+       (NO GLOW, BUTTONS INSIDE)
+    ================================= */
+    .help-wrapper {
+      max-width: 420px;
+      margin: 40px auto 0;
+    }
+
+    .help-card {
+      background: #020617;                 /* NO GRADIENT */
+      border: 1.5px solid rgba(34,197,94,0.6);
+      border-radius: 22px;
+      padding: 22px 18px 24px;
+      text-align: center;
+      overflow: hidden;                    /* FORCE CONTENT INSIDE */
+    }
+
+    .help-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .help-sub {
+      font-size: 13px;
+      color: #cbd5f5;
+      margin-bottom: 14px;
+    }
+
+    .help-choose {
+      font-size: 15px;
+      font-weight: 600;
+      color: #86efac;
+      margin-bottom: 14px;
+    }
+
+    .help-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;                  /* SMALLER BUTTONS */
+      min-width: 120px;                    /* FIT INSIDE CARD */
       border-radius: 999px;
-      border: 1px solid #334155;
-      background: #22c55e;
-      color: #000000;
+      border: 1.5px solid rgba(34,197,94,0.6);
       font-size: 14px;
       font-weight: 600;
-      cursor: pointer;
+      text-decoration: none;
+      background: transparent;
+      box-sizing: border-box;
     }
+
+    .action-btn img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .action-btn.whatsapp {
+      color: #22c55e;
+    }
+
+    .action-btn.gmail {
+      color: #ffffff;
+    }
+
+    .divider {
+      height: 30px;
+      border-left: 2px dotted rgba(34,197,94,0.6);
+    }
+
+    /* ================================
+   INSTALL HELP PROMPT STYLES
+================================= */
+.install-help-text {
+  text-align: center;
+  margin: 60px 0 16px;
+}
+
+.install-help-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e5e7eb;
+  margin-bottom: 6px;
+}
+
+.install-help-sub {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+
   </style>
 </head>
 
 <body>
+  <div class="container">
 
-  <!-- ✅ BACK BUTTON (MUST BE HERE) -->
-  <button class="back-btn" onclick="history.back()">← Back</button>
+    <!-- ================================
+         BACK BUTTON
+    ================================= -->
+    <button class="back-btn" onclick="location.href='index.html'">← Back</button>
 
-  <div class="box">
-    <h1>Krishna Mart App</h1>
-    <p>Official Android app for Krishna Mart customers.</p>
+    <!-- ================================
+     INSTALL HELP PROMPT (TEXT ONLY)
+================================= -->
+<div class="install-help-text">
+  <div class="install-help-title">Need Help to Install</div>
+  <div class="install-help-sub">scroll down ↓ </div>
+</div>
 
-    <a
-      class="btn"
-      href="https://knk22.github.io/krishna-home-cleaning-products/download-apk.html"
-    >
-      Download App
-    </a>
 
-    <div class="note">
-      SIze: *1.64 MB* <br>
-      Latest version: v1.0<br><br>
-      Open in Chrome • Install<br>
-      No login • No personal data collected<br><br>
-      Android only • Safe download
+    <!-- ================================
+         MAIN DOWNLOAD BOX
+    ================================= -->
+    <div class="box">
+      <h1>Krishna Mart App</h1>
+      <p>Official Android app for Krishna Mart customers.</p>
+
+      <a href="download-apk.html" class="download-btn">Download App</a>
+
+      <div class="note">
+        Size: *1.64 MB*<br>
+        Latest version: v1.0<br><br>
+        Open in Chrome • Install<br>
+        No login • No personal data collected<br><br>
+        Android only • Safe download
+      </div>
     </div>
+
+    <!-- ================================
+         SCREENSHOTS
+    ================================= -->
+    <section class="screenshots-section">
+      <div class="screenshots-container">
+        <img src="images/app-screenshots/home.jpg" class="screenshot">
+        <img src="images/app-screenshots/product.jpg" class="screenshot">
+        <img src="images/app-screenshots/offers.jpg" class="screenshot">
+        <img src="images/app-screenshots/cart.jpg" class="screenshot">
+      </div>
+
+      <div class="arrow-controls">
+        <span class="arrow-btn">&lt;</span>
+        <span class="arrow-btn">&gt;</span>
+      </div>
+    </section>
+
+    <!-- ================================
+         HELP SECTION (SAFE TO COPY/DELETE)
+    ================================= -->
+    <div class="help-wrapper">
+      <div class="help-card">
+        <div class="help-title">Need Help downloading 😊</div>
+        <div class="help-sub">Message us — we’ll guide you step by step</div>
+        <div class="help-choose">Choose one</div>
+
+        <div class="help-actions">
+          <a href="https://wa.me/919392908051" class="action-btn whatsapp">
+            <img src="icons/whatsapp.svg" alt="WhatsApp">
+            WhatsApp
+          </a>
+
+          <div class="divider"></div>
+
+          <a
+  href="mailto:krishnamart.help@gmail.com
+?subject=Help%20needed%20-%20Krishna%20Mart%20App
+&body=Hello%20Krishna%20Mart%20Team%2C%0A%0AI%20need%20help%20with%20downloading%20or%20installing%20the%20Krishna%20Mart%20app.%0A%0AThank%20you."
+  class="action-btn gmail"
+>
+  <img src="icons/gmail.svg" alt="Gmail">
+  Gmail
+</a>
+
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  <!-- ================================
+     SCREENSHOT FULLSCREEN PREVIEW
+================================= -->
+<div class="preview-overlay" id="previewOverlay">
+  <span class="preview-close" id="closePreview">✕</span>
+  <span class="preview-arrow left" id="prevPreview">‹</span>
+  <img id="previewImage">
+  <span class="preview-arrow right" id="nextPreview">›</span>
+</div>
+
+<script>
+  /* ================================
+     SCREENSHOT INTERACTION LOGIC
+  ================================= */
+  const screenshots = document.querySelectorAll('.screenshot');
+  const container = document.querySelector('.screenshots-container');
+
+  const overlay = document.getElementById('previewOverlay');
+  const previewImg = document.getElementById('previewImage');
+  const closeBtn = document.getElementById('closePreview');
+  const prevBtn = document.getElementById('prevPreview');
+  const nextBtn = document.getElementById('nextPreview');
+
+  const arrowLeft = document.querySelector('.arrow-btn:first-child');
+  const arrowRight = document.querySelector('.arrow-btn:last-child');
+
+  let currentIndex = 0;
+
+  /* OPEN FULLSCREEN */
+  screenshots.forEach((img, index) => {
+    img.addEventListener('click', () => {
+      currentIndex = index;
+      previewImg.src = img.src;
+      overlay.style.display = 'flex';
+    });
+  });
+
+  /* CLOSE FULLSCREEN */
+  closeBtn.onclick = () => overlay.style.display = 'none';
+
+  /* FULLSCREEN NAVIGATION */
+  prevBtn.onclick = () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      previewImg.src = screenshots[currentIndex].src;
+    }
+  };
+
+  nextBtn.onclick = () => {
+    if (currentIndex < screenshots.length - 1) {
+      currentIndex++;
+      previewImg.src = screenshots[currentIndex].src;
+    }
+  };
+
+  /* SCROLL SCREENSHOTS BELOW */
+  arrowLeft.onclick = () => {
+    container.scrollBy({ left: -260, behavior: 'smooth' });
+  };
+
+  arrowRight.onclick = () => {
+    container.scrollBy({ left: 260, behavior: 'smooth' });
+  };
+</script>
 
 </body>
 </html>
-
