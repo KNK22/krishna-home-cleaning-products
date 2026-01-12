@@ -155,10 +155,11 @@
 </div>
 
 <!-- ===============================
-     INSTALL APP STRIP
+     
+ STRIP
      =============================== -->
 
-<div class="install-box v7">
+<div class="install-box v7" id="installBox">
   <div class="left">
     <div class="icon logo">
       <img src="icons/icon-192.png" alt="Krishna App">
@@ -293,6 +294,28 @@
   REPACKED &amp; MARKETED BY KRISHNA
 </footer>
 
+<script>
+  (function () {
+    const installBox = document.getElementById("installBox");
+
+    function isPWAInstalled() {
+      return (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true
+      );
+    }
+
+    // Hide install strip if app is already installed
+    if (isPWAInstalled() && installBox) {
+      installBox.style.display = "none";
+    }
+
+    // Extra safety: once installed, hide it
+    window.addEventListener("appinstalled", () => {
+      if (installBox) installBox.style.display = "none";
+    });
+  })();
+</script>
+
 </body>
 </html>
-
