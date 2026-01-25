@@ -65,61 +65,59 @@
       background: #16a34a;
     }
 
-/* ===============================
-   DARK MODE (SYSTEM BASED)
-   =============================== */
+    /* ===============================
+       DARK MODE (SYSTEM BASED)
+       =============================== */
 
 
-  body {
-    background: #0f172a;
-    color: #e5e7eb;
-  }
+    body {
+      background: #0f172a;
+      color: #e5e7eb;
+    }
 
-  /* Header */
-  .header {
-    background: #020617;
-  }
+    /* Header */
+    .header {
+      background: #020617;
+    }
 
-  .header-title {
-    color: #f8fafc;
-  }
+    .header-title {
+      color: #f8fafc;
+    }
 
-  .trust-strip {
-    color: #22c55e; /* keep green */
-  }
+    .trust-strip {
+      color: #22c55e; /* keep green */
+    }
 
-  .header-divider {
-    border-color: #1e293b;
-  }
+    .header-divider {
+      border-color: #1e293b;
+    }
 
-  /* Cards */
-  .card {
-    background: #020617;
-    border-color: #1e293b;
-  }
+    /* Cards */
+    .card {
+      background: #020617;
+      border-color: #1e293b;
+    }
 
-  .card h3 {
-    color: #f8fafc;
-  }
+    .card h3 {
+      color: #f8fafc;
+    }
 
-  .card p {
-    color: #cbd5e1;
-  }
+    .card p {
+      color: #cbd5e1;
+    }
 
-  /* Buttons */
-  .header-pill,
-  .festive-home-btn {
-    background: #16a34a;
-    color: #000000;
-  }
+    /* Buttons */
+    .header-pill,
+    .festive-home-btn {
+      background: #16a34a;
+      color: #000000;
+    }
 
-  /* Festive box */
-  .festive-home-box {
-    background: #020617;
-    border-color: #1e293b;
-  }
-
-
+    /* Festive box */
+    .festive-home-box {
+      background: #020617;
+      border-color: #1e293b;
+    }
 
   </style>
 </head>
@@ -155,7 +153,7 @@
 </div>
 
 <!-- ===============================
-     
+
  STRIP
      =============================== -->
 
@@ -175,61 +173,171 @@
 
 
 <!-- =====================================================
+     ✅ OFFERS ENABLE/DISABLE OPTION (CHANGE HERE)
+     Set true  = show Live Offers Banner
+     Set false = show "No offers available" design
+===================================================== -->
+<script>
+  const OFFERS_ENABLED = true;  // ✅ CHANGE THIS TO false TO DISABLE OFFERS
+</script>
+
+<!-- =====================================================
      FESTIVE OFFER BLOCK (HOMEPAGE)
-     👉 ONLY THIS SECTION IS FOR FESTIVE POSTER
+     ✅ ENABLE/DISABLE OFFERS FROM OFFERS_ENABLED SWITCH
 ===================================================== -->
 
-<div class="festive-home-wrapper">
+<div id="offersSection"></div>
 
-  <div class="festive-home-box">
+<script>
+  (function () {
+    const el = document.getElementById("offersSection");
 
-    <!-- FESTIVE IMAGE -->
-    <div
-      class="festive-home-image"
-      style="background-image: url('./images/offers/offer-homepage.jpg'); position:relative;"
-    >
+    if (OFFERS_ENABLED) {
+      /* ✅ ENABLED: SHOW YOUR EXISTING OFFERS (UNCHANGED) */
+      el.innerHTML = `
+        <div class="festive-home-wrapper">
+          <div class="festive-home-box">
 
-      <!-- ===============================
-           FESTIVE OFFER STATUS (EDIT THIS)
-           =============================== -->
-      <div style="
-        position:absolute;
-        top:12px;
-        right:12px;
-        background:#dc2626;
-        color:#fff;
-        height:32px;
-        padding:0 14px;          /* ✅ left & right spacing */
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        gap:8px;                 /* ✅ space between dot & text */
-        border-radius:999px;
-        font-size:13px;
-        font-weight:600;
-        white-space:nowrap;      /* ✅ keeps pill clean */
-        ">
+            <!-- FESTIVE IMAGE -->
+            <div
+              class="festive-home-image"
+              style="background-image: url('./images/offers/offer-homepage.jpg'); position:relative;"
+            >
 
-        <span style="
-          width:8px;
-          height:8px;
-          background:#fff;
-          border-radius:50%;
-          display:inline-block;
-        "></span>
-        <span>LIVE</span>
-      </div>
+              <!-- LIVE PILL -->
+              <div style="
+                position:absolute;
+                top:12px;
+                right:12px;
+                background:#dc2626;
+                color:#fff;
+                height:32px;
+                padding:0 14px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                gap:8px;
+                border-radius:999px;
+                font-size:13px;
+                font-weight:600;
+                white-space:nowrap;
+                ">
 
-    </div>
+                <span style="
+                  width:8px;
+                  height:8px;
+                  background:#fff;
+                  border-radius:50%;
+                  display:inline-block;
+                "></span>
+                <span>LIVE</span>
+              </div>
 
-    <!-- BUTTON (RESTORED TO ORIGINAL POSITION) -->
-    <a href="offers.html" class="festive-home-btn">
-      View Today’s offers
-    </a>
+            </div>
 
-  </div>
+            <!-- BUTTON -->
+            <a href="offers.html" class="festive-home-btn">
+              View Today’s offers
+            </a>
 
-</div>
+          </div>
+        </div>
+      `;
+    } else {
+      /* ❌ DISABLED: SHOW NO OFFERS DESIGN (YOUR FINAL DESIGN) */
+      el.innerHTML = `
+        <div class="festive-home-wrapper">
+          <div class="festive-home-box" style="
+            border-radius: 24px;
+            padding: 14px 14px 16px;
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
+          ">
+
+            <!-- OFFERS PILL LEFT -->
+            <div style="
+              display:inline-flex;
+              align-items:center;
+              gap:10px;
+              padding:10px 14px;
+              border-radius:999px;
+              border:1px solid rgba(255,255,255,0.12);
+              font-size:13px;
+              font-weight:800;
+              color:#e2e8f0;
+              background:rgba(255,255,255,0.03);
+              white-space:nowrap;
+            ">
+              <span style="
+                width:10px;
+                height:10px;
+                border-radius:50%;
+                background:#64748b;
+                display:inline-block;
+              "></span>
+              OFFERS
+            </div>
+
+            <!-- EMOJI CENTER -->
+            <div style="
+              margin:12px auto 8px;
+              width:38px;
+              height:38px;
+              border-radius:18px;
+              background:rgba(255,255,255,0.04);
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              font-size:19px;
+            ">🥺</div>
+
+            <!-- TEXT CENTER -->
+            <div style="
+              font-size:18px;
+              font-weight:900;
+              color:#ffffff;
+              margin:0 0 6px;
+              text-align:center;
+            ">
+              No offers available currently
+            </div>
+
+            <div style="
+              font-size:12.5px;
+              color:#cbd5f5;
+              line-height:1.5;
+              margin:0 0 12px;
+              text-align:center;
+            ">
+              Check back later for new deals and festive discounts.
+            </div>
+
+            <!-- STAY TUNED (NOT CLICKABLE) -->
+            <div style="display:flex; justify-content:center;">
+              <div style="
+                display:inline-flex;
+                align-items:center;
+                justify-content:center;
+                padding:9px 18px;
+                border-radius:999px;
+                border:1px solid rgba(34,197,94,0.6);
+                color:#22c55e;
+                font-weight:900;
+                user-select:none;
+                pointer-events:none;
+                cursor:default;
+              ">
+                Stay tuned
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+    }
+  })();
+</script>
+
 
 
 <!-- =====================================================
